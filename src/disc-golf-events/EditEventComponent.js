@@ -65,7 +65,6 @@ const EditEventComponent = () => {
         >
             {discGolfEvents.map(dgEvent => <option key={dgEvent.id} value={dgEvent.id}>{dgEvent.tournamentTitle}</option>)}
         </select>
-        <p>Your favorite fruit: {eventIdToEdit}</p>
         <div>
             <label htmlFor="tournamentDate">Tournament Date </label>
             <input type="text" id="tournamentDate" ref={tournamentDateInputRef} />
