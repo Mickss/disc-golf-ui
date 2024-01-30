@@ -11,7 +11,7 @@ const EditEventComponent = () => {
     }, []);
 
     useEffect(() => {
-        fetchEvent(eventIdToEdit);
+        eventIdToEdit && fetchEvent(eventIdToEdit);
     }, eventIdToEdit);
 
     const fetchEvents = () => {
@@ -32,7 +32,13 @@ const EditEventComponent = () => {
     const regionInputRef = useRef();
     const registrationInputRef = useRef();
 
-    const updateEvent = (eventId) => {
+    eventToEdit.tournamentDate && (tournamentDateInputRef.current.value = eventToEdit.tournamentDate);
+    eventToEdit.pdga && (pdgaInputRef.current.value = eventToEdit.pdga);
+    eventToEdit.tournamentTitle && (tournamentTitleInputRef.current.value = eventToEdit.tournamentTitle);
+    eventToEdit.region && (regionInputRef.current.value = eventToEdit.region);
+    eventToEdit.registration && (registrationInputRef.current.value = eventToEdit.registration);
+
+    const updateEvent = () => {
         const eventData = {
             tournamentDate: tournamentDateInputRef.current.value,
             pdga: pdgaInputRef.current.value,
@@ -41,7 +47,7 @@ const EditEventComponent = () => {
             registration: registrationInputRef.current.value,
         };
 
-        fetch(`http://localhost:8080/events/${eventId}`, {
+        fetch(`http://localhost:8080/events/${eventIdToEdit}`, {
             method: "put",
             headers: {
                 "Content-Type": "application/json",
@@ -57,16 +63,16 @@ const EditEventComponent = () => {
             value={eventIdToEdit}
             onChange={e => setEventIdToEdit(e.target.value)}
         >
-            {discGolfEvents.map(dgEvent => <option value={dgEvent.id}>{dgEvent.tournamentTitle}</option>)}
+            {discGolfEvents.map(dgEvent => <option key={dgEvent.id} value={dgEvent.id}>{dgEvent.tournamentTitle}</option>)}
         </select>
         <p>Your favorite fruit: {eventIdToEdit}</p>
         <div>
             <label htmlFor="tournamentDate">Tournament Date </label>
-            <input type="text" id="tournamentDate" ref={tournamentDateInputRef} value={eventToEdit.tournamentDate} />
+            <input type="text" id="tournamentDate" ref={tournamentDateInputRef} />
         </div>
         <div>
             <label htmlFor="pdga">PDGA </label>
-            <input type="text" id="pdga" ref={pdgaInputRef} value={eventToEdit.pdga} />
+            <input type="text" id="pdga" ref={pdgaInputRef} />
         </div>
         <div>
             <label htmlFor="tournamentTitle">Tournament Title </label>

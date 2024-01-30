@@ -37,7 +37,7 @@ const DiscGolfEventsComponent = () => {
           <TableBody>
             {discGolfEvents.map((discGolfEvent) => (
               <TableRow
-                key={discGolfEvent.name}
+                key={discGolfEvent.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                 <TableCell align="left">{discGolfEvent.tournamentDate}</TableCell>
                 <TableCell align="left">{discGolfEvent.pdga}</TableCell>
