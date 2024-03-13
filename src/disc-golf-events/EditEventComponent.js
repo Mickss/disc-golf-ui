@@ -17,7 +17,12 @@ const EditEventComponent = () => {
     const fetchEvents = () => {
         fetch("http://localhost:8080/events")
             .then((response) => response.json())
-            .then((data) => setDiscGolfEvents(data));
+            .then((data) => {
+                setDiscGolfEvents(data);
+                if (data.length > 0) {
+                    setEventIdToEdit(data[0].id);
+                }
+            });
     };
 
     const fetchEvent = (eventId) => {
