@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,11 +9,6 @@ import Paper from "@mui/material/Paper";
 import TableSortLabel from "@mui/material/TableSortLabel";
 
 const DiscGolfEventsComponent = () => {
-  const tournamentDateInputRef = useRef();
-  const pdgaInputRef = useRef();
-  const tournamentTitleInputRef = useRef();
-  const regionInputRef = useRef();
-  const registrationInputRef = useRef();
 
   const [discGolfEvents, setDiscGolfEvents] = useState([]);
   const [valueToOrderBy, setValueToOrderBy] = useState("");
@@ -55,48 +50,8 @@ const DiscGolfEventsComponent = () => {
       });
   };
 
-  const createEvent = () => {
-    const eventData = {
-      tournamentDate: tournamentDateInputRef.current.value,
-      pdga: pdgaInputRef.current.value,
-      tournamentTitle: tournamentTitleInputRef.current.value,
-      region: regionInputRef.current.value,
-      registration: registrationInputRef.current.value,
-    };
-
-    fetch("http://localhost:8080/events", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(eventData),
-    });
-  };
-
   return (
     <>
-      <div>
-        <label htmlFor="tournamentDate">Tournament Date </label>
-        <input type="text" id="tournamentDate" ref={tournamentDateInputRef} />
-      </div>
-      <div>
-        <label htmlFor="pdga">PDGA </label>
-        <input type="text" id="pdga" ref={pdgaInputRef} />
-      </div>
-      <div>
-        <label htmlFor="tournamentTitle">Tournament Title </label>
-        <input type="text" id="tournamentTitle" ref={tournamentTitleInputRef} />
-      </div>
-      <div>
-        <label htmlFor="region">Region </label>
-        <input type="text" id="region" ref={regionInputRef} />
-      </div>
-      <div>
-        <label htmlFor="registration">Registration </label>
-        <input type="text" id="registration" ref={registrationInputRef} />
-      </div>
-      <button onClick={createEvent}>Create Event</button>
-
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -154,7 +109,7 @@ const DiscGolfEventsComponent = () => {
           <TableBody>
             {discGolfEvents.map((discGolfEvent) => (
               <TableRow
-                key={discGolfEvent.name}
+                key={discGolfEvent.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell align="left">
