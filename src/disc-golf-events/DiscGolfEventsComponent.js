@@ -9,7 +9,6 @@ import Paper from "@mui/material/Paper";
 import TableSortLabel from "@mui/material/TableSortLabel";
 
 const DiscGolfEventsComponent = () => {
-
   const [discGolfEvents, setDiscGolfEvents] = useState([]);
   const [valueToOrderBy, setValueToOrderBy] = useState("");
   const [orderDirection, setOrderDirection] = useState("");
@@ -57,52 +56,57 @@ const DiscGolfEventsComponent = () => {
           <TableHead>
             <TableRow>
               <TableCell align="left">
-                Tournament date
                 <TableSortLabel
                   active={valueToOrderBy === "tournamentDate"}
                   direction={
                     valueToOrderBy == "tournamentDate" ? orderDirection : "asc"
                   }
                   onClick={createSortHandler("tournamentDate")}
-                ></TableSortLabel>
+                >
+                  Tournament date
+                </TableSortLabel>
               </TableCell>
               <TableCell align="left">
-                PDGA
                 <TableSortLabel
                   active={valueToOrderBy === "pdga"}
                   direction={valueToOrderBy == "pdga" ? orderDirection : "asc"}
                   onClick={createSortHandler("pdga")}
-                ></TableSortLabel>
+                >
+                  PDGA
+                </TableSortLabel>
               </TableCell>
               <TableCell align="left">
-                Tournament title
                 <TableSortLabel
                   active={valueToOrderBy === "tournamentTitle"}
                   direction={
                     valueToOrderBy == "tournamentTitle" ? orderDirection : "asc"
                   }
                   onClick={createSortHandler("tournamentTitle")}
-                ></TableSortLabel>
+                >
+                  Tournament title
+                </TableSortLabel>
               </TableCell>
               <TableCell align="left">
-                Region
                 <TableSortLabel
                   active={valueToOrderBy === "region"}
                   direction={
                     valueToOrderBy == "region" ? orderDirection : "asc"
                   }
                   onClick={createSortHandler("region")}
-                ></TableSortLabel>
+                >
+                  Region
+                </TableSortLabel>
               </TableCell>
               <TableCell align="left">
-                Registration
                 <TableSortLabel
                   active={valueToOrderBy === "registration"}
                   direction={
                     valueToOrderBy == "registration" ? orderDirection : "asc"
                   }
                   onClick={createSortHandler("registration")}
-                ></TableSortLabel>
+                >
+                  Registration
+                </TableSortLabel>
               </TableCell>
             </TableRow>
           </TableHead>
