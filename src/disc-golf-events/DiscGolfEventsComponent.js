@@ -7,6 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import TableSortLabel from "@mui/material/TableSortLabel";
+import Linkify from "linkify-react";
 
 const DiscGolfEventsComponent = () => {
   const [discGolfEvents, setDiscGolfEvents] = useState([]);
@@ -124,7 +125,15 @@ const DiscGolfEventsComponent = () => {
                   {discGolfEvent.tournamentTitle}
                 </TableCell>
                 <TableCell align="left">{discGolfEvent.region}</TableCell>
-                <TableCell align="left">{discGolfEvent.registration}</TableCell>
+                <TableCell align="left">
+                  <Linkify
+                    options={{
+                      target: "_blank",
+                    }}
+                  >
+                    {discGolfEvent.registration}
+                  </Linkify>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
