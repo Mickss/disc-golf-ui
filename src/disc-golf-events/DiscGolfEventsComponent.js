@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,6 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Linkify from "linkify-react";
+import LoginComponent from "../user/LoginComponent";
 
 const DiscGolfEventsComponent = () => {
   const [discGolfEvents, setDiscGolfEvents] = useState([]);
@@ -50,34 +51,9 @@ const DiscGolfEventsComponent = () => {
       });
   };
 
-  const usernameInputRef = useRef();
-  const passwordInputRef = useRef();
-
-  const submit = () => {
-    const submitData = {
-      username: usernameInputRef.current.value,
-      password: passwordInputRef.current.value,
-    };
-
-    fetch("http://localhost:25003/auth/login", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(submitData),
-    });
-  };
-
   return (
     <>
-      <div>
-        <h3>Sign in</h3>
-        <input type="text" name="username" ref={usernameInputRef} />
-        <div>
-          <input type="password" name="password" ref={passwordInputRef} />
-        </div>
-        <button onClick={submit}>Submit</button>
-      </div>
+      <LoginComponent />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
