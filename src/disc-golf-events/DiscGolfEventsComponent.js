@@ -8,6 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Linkify from "linkify-react";
+import LoginComponent from "../user/LoginComponent";
 
 const DiscGolfEventsComponent = () => {
   const [discGolfEvents, setDiscGolfEvents] = useState([]);
@@ -52,6 +53,7 @@ const DiscGolfEventsComponent = () => {
 
   return (
     <>
+      <LoginComponent />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
