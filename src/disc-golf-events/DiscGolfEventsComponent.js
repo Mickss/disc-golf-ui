@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Linkify from "linkify-react";
 import LoginComponent from "../user/LoginComponent";
+import Button from "@mui/material/Button";
 
 const DiscGolfEventsComponent = () => {
   const [discGolfEvents, setDiscGolfEvents] = useState([]);
@@ -53,7 +54,16 @@ const DiscGolfEventsComponent = () => {
 
   return (
     <>
-      <LoginComponent />
+      {/* <LoginComponent /> */}
+      <Button variant="contained" color="success" style={{ margin: 20, marginRight: 50 }}>
+        Add tournament
+      </Button>
+      <Button variant="contained" style={{ margin: 10 }}>
+        My tournaments
+      </Button>
+      <Button variant="contained" style={{ margin: 10 }}>
+        More info
+      </Button>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
