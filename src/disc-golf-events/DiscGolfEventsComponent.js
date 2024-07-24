@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Linkify from "linkify-react";
 import LoginComponent from "../user/LoginComponent";
+import config from "../config";
 
 const DiscGolfEventsComponent = () => {
   const [discGolfEvents, setDiscGolfEvents] = useState([]);
@@ -30,7 +31,7 @@ const DiscGolfEventsComponent = () => {
   }, [valueToOrderBy, orderDirection]);
 
   const fetchEvents = () => {
-    let url = "http://localhost:8080/events";
+    let url = `${config.apiUrl}/events`;
     if (valueToOrderBy) {
       url += "?valueToOrderBy=" + valueToOrderBy;
       if (orderDirection) {
@@ -62,7 +63,7 @@ const DiscGolfEventsComponent = () => {
                 <TableSortLabel
                   active={valueToOrderBy === "tournamentDate"}
                   direction={
-                    valueToOrderBy == "tournamentDate" ? orderDirection : "asc"
+                    valueToOrderBy === "tournamentDate" ? orderDirection : "asc"
                   }
                   onClick={createSortHandler("tournamentDate")}
                 >
@@ -72,7 +73,7 @@ const DiscGolfEventsComponent = () => {
               <TableCell align="left">
                 <TableSortLabel
                   active={valueToOrderBy === "pdga"}
-                  direction={valueToOrderBy == "pdga" ? orderDirection : "asc"}
+                  direction={valueToOrderBy === "pdga" ? orderDirection : "asc"}
                   onClick={createSortHandler("pdga")}
                 >
                   PDGA
@@ -82,7 +83,7 @@ const DiscGolfEventsComponent = () => {
                 <TableSortLabel
                   active={valueToOrderBy === "tournamentTitle"}
                   direction={
-                    valueToOrderBy == "tournamentTitle" ? orderDirection : "asc"
+                    valueToOrderBy === "tournamentTitle" ? orderDirection : "asc"
                   }
                   onClick={createSortHandler("tournamentTitle")}
                 >
@@ -93,7 +94,7 @@ const DiscGolfEventsComponent = () => {
                 <TableSortLabel
                   active={valueToOrderBy === "region"}
                   direction={
-                    valueToOrderBy == "region" ? orderDirection : "asc"
+                    valueToOrderBy === "region" ? orderDirection : "asc"
                   }
                   onClick={createSortHandler("region")}
                 >
@@ -104,7 +105,7 @@ const DiscGolfEventsComponent = () => {
                 <TableSortLabel
                   active={valueToOrderBy === "registration"}
                   direction={
-                    valueToOrderBy == "registration" ? orderDirection : "asc"
+                    valueToOrderBy === "registration" ? orderDirection : "asc"
                   }
                   onClick={createSortHandler("registration")}
                 >
