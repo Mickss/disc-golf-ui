@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import config from "../config";
 
 const EditEventComponent = () => {
 
@@ -15,7 +16,7 @@ const EditEventComponent = () => {
     }, eventIdToEdit);
 
     const fetchEvents = () => {
-        fetch("http://localhost:8080/events")
+        fetch(`${config.apiUrl}/events`)
             .then((response) => response.json())
             .then((data) => {
                 setDiscGolfEvents(data);
@@ -26,7 +27,7 @@ const EditEventComponent = () => {
     };
 
     const fetchEvent = (eventId) => {
-        fetch(`http://localhost:8080/events/${eventId}`)
+        fetch(`${config.apiUrl}/events/${eventId}`)
             .then((response) => response.json())
             .then((data) => setEventToEdit(data));
     };
@@ -52,7 +53,7 @@ const EditEventComponent = () => {
             registration: registrationInputRef.current.value,
         };
 
-        fetch(`http://localhost:8080/events/${eventIdToEdit}`, {
+        fetch(`${config.apiUrl}/events/${eventIdToEdit}`, {
             method: "put",
             headers: {
                 "Content-Type": "application/json",
