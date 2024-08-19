@@ -9,13 +9,13 @@ const Header = () => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Box sx={{flexGrow: 1, display: 'flex', gap: 2}}>
-          <Button color="inherit" component={Link} to="/">Home</Button>
+        <Box sx={ {flexGrow: 1, display: 'flex', gap: 2} }>
+          <Button color="inherit" component={ Link } to="/">Home</Button>
           <Button color="inherit">My tournaments</Button>
           <Button color="inherit">Contact</Button>
         </Box>
 
-        <Button color="inherit" component={Link} to="/sign-in">Sign in</Button>
+        <Button color="inherit" component={ Link } to="/sign-in">Sign in</Button>
       </Toolbar>
     </AppBar>
   );

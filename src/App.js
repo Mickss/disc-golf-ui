@@ -13,15 +13,15 @@ export default function App() {
 
   const theme = createTheme();
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={ theme }>
       <CssBaseline />
       <Header />
 
       <Routes>
-        <Route path="/" element={<DiscGolfEventsComponent />} />
-        <Route path="/sign-in" element={<SignInComponent />} />
-        <Route path="/5add25" element={<AddEventComponent />} />
-        <Route path="/5edit35" element={<EditEventComponent />} />
+        <Route path="/" element={ <DiscGolfEventsComponent /> } />
+        <Route path="/sign-in" element={ <SignInComponent /> } />
+        <Route path="/5add25" element={ <AddEventComponent /> } />
+        <Route path="/5edit35" element={ <EditEventComponent /> } />
       </Routes>
     </ThemeProvider>
   );
