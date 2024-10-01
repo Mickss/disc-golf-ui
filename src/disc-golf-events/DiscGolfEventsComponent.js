@@ -30,7 +30,7 @@ const DiscGolfEventsComponent = () => {
   }, [valueToOrderBy, orderDirection]);
 
   const fetchEvents = () => {
-    let url = `${config.apiUrl}/events`;
+    let url = `${config.discGolfServiceUrl}/public/events`;
     if (valueToOrderBy) {
       url += "?valueToOrderBy=" + valueToOrderBy;
       if (orderDirection) {

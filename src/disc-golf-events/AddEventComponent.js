@@ -10,7 +10,10 @@ const AddEventComponent = () => {
     }, []);
 
     const fetchEvents = () => {
-        fetch(`${config.apiUrl}/events`)
+        fetch(`${config.discGolfServiceUrl}/events`, {
+            method: 'GET',
+            credentials: 'include',
+        })
             .then((response) => response.json())
             .then((data) => setDiscGolfEvents(data));
     };
@@ -30,11 +33,12 @@ const AddEventComponent = () => {
             registration: registrationInputRef.current.value,
         };
 
-        fetch(`${config.apiUrl}/events`, {
+        fetch(`${config.discGolfServiceUrl}/events`, {
             method: "post",
             headers: {
                 "Content-Type": "application/json",
             },
+            credentials: 'include',
             body: JSON.stringify(eventData),
         });
     };

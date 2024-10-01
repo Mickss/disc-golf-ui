@@ -16,7 +16,10 @@ const EditEventComponent = () => {
     }, eventIdToEdit);
 
     const fetchEvents = () => {
-        fetch(`${config.apiUrl}/events`)
+        fetch(`${config.discGolfServiceUrl}/events`, {
+            method: 'GET',
+            credentials: 'include',
+        })
             .then((response) => response.json())
             .then((data) => {
                 setDiscGolfEvents(data);
@@ -27,7 +30,10 @@ const EditEventComponent = () => {
     };
 
     const fetchEvent = (eventId) => {
-        fetch(`${config.apiUrl}/events/${eventId}`)
+        fetch(`${config.discGolfServiceUrl}/events/${eventId}`, {
+            method: 'GET',
+            credentials: 'include',
+        })
             .then((response) => response.json())
             .then((data) => setEventToEdit(data));
     };
@@ -53,11 +59,12 @@ const EditEventComponent = () => {
             registration: registrationInputRef.current.value,
         };
 
-        fetch(`${config.apiUrl}/events/${eventIdToEdit}`, {
+        fetch(`${config.discGolfServiceUrl}/events/${eventIdToEdit}`, {
             method: "put",
             headers: {
                 "Content-Type": "application/json",
             },
+            credentials: 'include',
             body: JSON.stringify(eventData),
         });
     };
