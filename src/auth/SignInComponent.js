@@ -1,7 +1,11 @@
 import React from 'react';
 import { Button, TextField, Link, Grid, Box, Typography } from '@mui/material';
+import {useNavigate} from "react-router-dom";
 
 function SignInComponent() {
+
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -10,11 +14,12 @@ function SignInComponent() {
       password: data.get('password'),
     };
 
-    fetch("http://localhost:25003/public/auth/login", {
+    fetch("http://localhost:24001/api/axion-auth-service/public/auth/login", {
       method: "post",
       headers: {
         "Content-Type": "application/json"
       },
+      credentials: "include",
       body: JSON.stringify(loginData)
     })
       .then((response) => {
@@ -23,9 +28,7 @@ function SignInComponent() {
         }
         return response.text();
       })
-      .then((token) => {
-        console.log("token", token) // TODO store token securely
-      })
+      .then(() => navigate("/"));
 
   };
 
