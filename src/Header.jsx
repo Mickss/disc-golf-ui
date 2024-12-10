@@ -40,7 +40,7 @@ const Header = () => {
         )}
         {isLoggedIn && (
           <Button variant="inherit" color="inherit" onClick={handleLogout}>
-            Log Out
+            Logout
           </Button>
         )}
       </Toolbar>
