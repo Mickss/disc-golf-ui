@@ -32,17 +32,17 @@ const Header = () => {
           <Button color="inherit">My tournaments</Button>
           <Button color="inherit">Contact</Button>
         </Box>
-
-        {!isLoggedIn && (
-          <Button color="inherit" component={Link} to="/sign-in">
-            Sign in
-          </Button>
-        )}
-        {isLoggedIn && (
-          <Button variant="inherit" color="inherit" onClick={handleLogout}>
-            Logout
-          </Button>
-        )}
+        <Box>
+          {isLoggedIn ? (
+            <Button color="inherit" onClick={handleLogout}>
+              Log out
+            </Button>
+          ) : (
+            <Button color="inherit" component={Link} to="/sign-in">
+              Sign in
+            </Button>
+          )}
+        </Box>
       </Toolbar>
     </AppBar>
   );
