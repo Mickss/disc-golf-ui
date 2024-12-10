@@ -35,18 +35,6 @@ function SignInComponent() {
       .catch((err) => console.error("Login faild:", err));
   };
 
-  const handleLogout = () => {
-    fetch("http://localhost:24001/api/axion-auth-service/public/auth/logout", {
-      method: "post",
-      credentials: "include",
-    })
-      .then(() => {
-        console.log("User logged out, setting isLoggedIn to false");
-        logout();
-      })
-      .catch((err) => console.error("Logout failed", err));
-  };
-
   return (
     <Box
       sx={{
@@ -114,14 +102,6 @@ function SignInComponent() {
           <Typography component="h1" variant="h5">
             You are logged in!
           </Typography>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleLogout}
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Log Out
-          </Button>
         </>
       )}
     </Box>
