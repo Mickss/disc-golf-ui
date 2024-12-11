@@ -1,50 +1,53 @@
-import React from 'react';
-import { Button, TextField, Link, Grid, Box, Typography } from '@mui/material';
-import {useNavigate} from "react-router-dom";
+import React, { useContext } from "react";
+import { Button, TextField, Link, Grid, Box, Typography } from "@mui/material";
+import { AuthContext } from "./AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function SignInComponent() {
-
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const loginData = {
-      username: data.get('email'),
-      password: data.get('password'),
+      username: data.get("email"),
+      password: data.get("password"),
     };
 
     fetch("http://localhost:24001/api/axion-auth-service/public/auth/login", {
       method: "post",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(loginData)
+      body: JSON.stringify(loginData),
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error('HTTP error!'); // TODO handle error gracefully
+          throw new Error("HTTP error!"); // TODO handle error gracefully
         }
         return response.text();
       })
-      .then(() => navigate("/"));
-
+      .then(() => {
+        console.log("User logged in, setting login to true");
+        login();
+        navigate("/");
+      })
+      .catch((err) => console.error("Login faild:", err));
   };
 
   return (
     <Box
       sx={{
         marginTop: 8,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
       <Typography component="h1" variant="h5">
         Sign in
       </Typography>
-      <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
+      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
         <TextField
           margin="normal"
           required
@@ -69,7 +72,7 @@ function SignInComponent() {
           type="submit"
           fullWidth
           variant="contained"
-          sx={{mt: 3, mb: 2}}
+          sx={{ mt: 3, mb: 2 }}
         >
           Sign In
         </Button>
