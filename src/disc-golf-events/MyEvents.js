@@ -1,5 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../auth/AuthContext";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import Alert from "@mui/material/Alert";
+import Typography from "@mui/material/Typography";
 
 const MyEvents = () => {
   const [myEvents, setMyEvents] = useState([]);
@@ -42,64 +51,78 @@ const MyEvents = () => {
   };
 
   if (!isLoggedIn) {
-    return <p>You need to be logged in to view your events.</p>;
+    return (
+      <Alert severity="info" sx={{ maxWidth: 600, margin: "20px auto" }}>
+        You need to be logged in to view your events.
+      </Alert>
+    );
   }
 
   if (error) {
-    <div className="p-4 text-center text-red-600">
+    return (
+      <Alert severity="error" sx={{ maxWidth: 600, margin: "20px auto" }}>
         Error loading events: {error}
-      </div>
+      </Alert>
+    );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6 text-center">My Registered Events</h1>
+    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
+      <Typography
+        variant="h4"
+        component="h1"
+        sx={{ textAlign: "center", mb: 4 }}
+      >
+        My Registered Events
+      </Typography>
       
       {myEvents.length > 0 ? (
-        <div className="space-y-4">
-          {myEvents.map((event) => (
-            <div 
-              key={event.id}
-              className="bg-white border rounded-lg p-6 shadow hover:shadow-md transition-shadow"
-            >
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-xl font-semibold text-blue-600">
+        <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="my events table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Tournament Title</TableCell>
+              <TableCell align="left">PDGA</TableCell>
+              <TableCell align="left">Date</TableCell>
+              <TableCell align="left">Region</TableCell>
+              <TableCell align="left">Registration</TableCell>
+              <TableCell align="left">Vacancies</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {myEvents.map((event) => (
+              <TableRow
+                key={event.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
                   {event.tournamentTitle}
-                </h2>
-                <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                  PDGA: {event.pdga}
-                </span>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600">
-                <div>
-                  <span className="font-medium">Date: </span>
+                </TableCell>
+                <TableCell align="left">{event.pdga}</TableCell>
+                <TableCell align="left">
                   {formatDate(event.tournamentDate)}
-                </div>
-                <div>
-                  <span className="font-medium">Region: </span>
-                  {event.region}
-                </div>
-                <div>
-                  <span className="font-medium">Registration Status: </span>
-                  <span className={`${
-                    event.registration === 'OPEN' ? 'text-green-600' : 'text-red-600'
-                  }`}>
+                </TableCell>
+                <TableCell align="left">{event.region}</TableCell>
+                <TableCell align="left">
+                  <span
+                    style={{
+                      color:
+                        event.registration === "OPEN" ? "#16a34a" : "#dc2626",
+                    }}
+                  >
                     {event.registration}
                   </span>
-                </div>
-                <div>
-                  <span className="font-medium">Vacancies: </span>
-                  {event.vacancies}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+                </TableCell>
+                <TableCell align="left">{event.vacancies}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       ) : (
-        <div className="text-center text-gray-600 p-8 bg-gray-50 rounded-lg">
-          <p className="text-lg">You haven't registered for any events yet.</p>
-        </div>
+        <Alert severity="info" sx={{ maxWidth: 600, margin: "20px auto" }}>
+          You haven't registered for any events yet.
+        </Alert>
       )}
     </div>
   );
