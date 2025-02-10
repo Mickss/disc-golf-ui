@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import TableSortLabel from "@mui/material/TableSortLabel";
+import config from "../config";
 
 const DiscGolfEventsComponent = () => {
   const [discGolfEvents, setDiscGolfEvents] = useState([]);
@@ -31,35 +32,27 @@ const DiscGolfEventsComponent = () => {
     fetchEvents();
   }, [valueToOrderBy, orderDirection]);
 
-  const fetchEvents = async () => {
-    try {
-      let url = `http://localhost:24001/api/disc-golf-service/public/events`;
-      if (valueToOrderBy) {
-        url += `?valueToOrderBy=${valueToOrderBy}`;
-        if (orderDirection) {
-          url += `&orderDirection=${orderDirection.toUpperCase()}`;
-        }
+  const fetchEvents = () => {
+    let url = `${config.discGolfServiceUrl}/public/events`;
+    if (valueToOrderBy) {
+      url += "?valueToOrderBy=" + valueToOrderBy;
+      if (orderDirection) {
+        url += "&orderDirection=" + orderDirection.toUpperCase();
       }
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: 'include'
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setDiscGolfEvents(data);
-      setError(null);
-    } catch (error) {
-      console.error("Error fetching events:", error);
-      setError(error.message);
     }
+
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Received invalid response", response.status);
+        }
+        return response.json();
+      })
+      .then((data) => setDiscGolfEvents(data))
+      .catch((error) => {
+        console.error("Error while fetching events", error);
+        setError(error.message);
+      });
   };
 
   const handleRegister = async (eventId) => {
@@ -73,7 +66,7 @@ const DiscGolfEventsComponent = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:24001/api/disc-golf-service/events/${eventId}/register`, {
+      const response = await fetch(`${config.discGolfServiceUrl}/events/${eventId}/register`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -105,7 +98,7 @@ const DiscGolfEventsComponent = () => {
 
   const handleUnregister = async (eventId) => {
     try {
-      const response = await fetch(`http://localhost:24001/api/disc-golf-service/events/${eventId}/unregister`, {
+      const response = await fetch(`${config.discGolfServiceUrl}/events/${eventId}/unregister`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
