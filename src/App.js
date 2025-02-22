@@ -9,6 +9,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import MyEvents from "./disc-golf-events/MyEvents";
 import React from "react";
+import GlobalLoading from "./spinner/GlobalLoading";
 
 export default function App() {
 
@@ -16,6 +17,7 @@ export default function App() {
   return (
     <ThemeProvider theme={ theme }>
       <CssBaseline />
+      <GlobalLoading />
       <Header />
 
       <Routes>
