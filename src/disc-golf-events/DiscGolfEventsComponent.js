@@ -12,6 +12,12 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import TableSortLabel from "@mui/material/TableSortLabel";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 import config from "../config";
 
 const DiscGolfEventsComponent = () => {
@@ -21,6 +27,15 @@ const DiscGolfEventsComponent = () => {
   const [error, setError] = useState(null);
   const { isLoggedIn } = useContext(AuthContext);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    tournamentDate: '',
+    pdga: '',
+    tournamentTitle: '',
+    region: '',
+    registration: ''
+  });
 
   const createSortHandler = (property) => (event) => {
     const isAscending = valueToOrderBy === property && orderDirection === "asc";
@@ -145,6 +160,60 @@ const DiscGolfEventsComponent = () => {
     );
   }
 
+  const handleEdit = (event) => {
+    setEditingEvent(event);
+    setEditFormData({
+      tournamentDate: event.tournamentDate,
+      pdga: event.pdga,
+      tournamentTitle: event.tournamentTitle,
+      region: event.region,
+      registration: event.registration
+    });
+    setEditDialogOpen(true);
+  };
+
+  const handleEditFormChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleEditSubmit = () => {
+    fetch(`${config.discGolfServiceUrl}/events/${editingEvent.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify(editFormData)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to edit event');
+        }
+        return response.json();
+      })
+      .then(() => {
+        setSnackbar({
+          open: true,
+          message: "Successfully edited event",
+          severity: "success"
+        });
+        setEditDialogOpen(false);
+        fetchEvents();
+      })
+      .catch(error => {
+        console.error('Error editing event:', error);
+        setSnackbar({
+          open: true,
+          message: "Failed to edit event",
+          severity: "error"
+        });
+      });
+  };
+
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
       <Typography
@@ -221,6 +290,15 @@ const DiscGolfEventsComponent = () => {
                 </TableCell>
                 <TableCell>{event.vacancies}</TableCell>
                 <TableCell align="right">
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    size="small"
+                    onClick={() => handleEdit(event)}
+                    sx={{ mr: 1 }}
+                  >
+                    Edit
+                  </Button>
                   {event.isRegistered ? (
                     <Button
                       variant="outlined"
@@ -247,6 +325,69 @@ const DiscGolfEventsComponent = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
+        <DialogTitle>Edit Event</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="Tournament Date"
+            type="date"
+            fullWidth
+            name="tournamentDate"
+            value={editFormData.tournamentDate}
+            onChange={handleEditFormChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            margin="dense"
+            label="PDGA"
+            type="text"
+            fullWidth
+            name="pdga"
+            value={editFormData.pdga}
+            onChange={handleEditFormChange}
+          />
+          <TextField
+            margin="dense"
+            label="Tournament Title"
+            type="text"
+            fullWidth
+            name="tournamentTitle"
+            value={editFormData.tournamentTitle}
+            onChange={handleEditFormChange}
+          />
+          <TextField
+            margin="dense"
+            label="Region"
+            type="text"
+            fullWidth
+            name="region"
+            value={editFormData.region}
+            onChange={handleEditFormChange}
+          />
+          <TextField
+            margin="dense"
+            label="Registration"
+            select
+            fullWidth
+            name="registration"
+            value={editFormData.registration}
+            onChange={handleEditFormChange}
+          >
+            <MenuItem value="OPEN">OPEN</MenuItem>
+            <MenuItem value="CLOSED">CLOSED</MenuItem>
+          </TextField>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleEditSubmit} color="primary">
+            Save Changes
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Snackbar
         open={snackbar.open}
