@@ -50,7 +50,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                             <TableRow key={row.id || rowIndex} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                                 {columns.map((column, colIndex) => (
                                     <TableCell key={colIndex} component="th" scope="row" align={column.align || "left"}>
-                                        {row[column.field]}
+                                        {column.visual ? column.visual(row) : row[column.field]}
                                     </TableCell>
                                 ))}
                                 {renderActions && (

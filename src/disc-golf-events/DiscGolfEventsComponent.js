@@ -3,6 +3,12 @@ import { AuthContext } from "../auth/AuthContext";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 import config from "../config";
 import ReusableTable from "../components/ReusableTable";
 import {useLoading} from "../spinner/LoadingProvider";
@@ -13,6 +19,16 @@ const DiscGolfEventsComponent = () => {
   const [error, setError] = useState(null);
   const { isLoggedIn } = useContext(AuthContext);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    tournamentDate: '',
+    pdga: '',
+    tournamentTitle: '',
+    region: '',
+    registration: ''
+  });
+
   const { loading, setLoading } = useLoading();
 
   const createSortHandler = async (sortField, sortDirection) => {
@@ -140,22 +156,68 @@ const DiscGolfEventsComponent = () => {
   }
 
   const columns = [
-    { header: "Tournament Date", field: "tournamentDate" },
+    { header: "Tournament Date", field: "tournamentDate", visual: (event) => formatDate(event.tournamentDate) },
     { header: "PDGA", field: "pdga" },
     { header: "Tournament Title", field: "tournamentTitle" },
     { header: "Region", field: "region" },
-    { header: "Registration", field: "registration" },
+    { header: "Registration", field: "registration", visual: (event) => <span style={{ color: event.registration === "Open" ? "#16a34a" : "#dc2626" }}>
+          {event.registration}
+        </span> },
     { header: "Vacancies", field: "vacancies" },
   ];
 
-  const renderVisual = (myEvents) => {
-    return myEvents.map((event) => {
-      return {...event,
-        tournamentDate: formatDate(event.tournamentDate),
-        registration: <span style={{ color: event.registration === "Open" ? "#16a34a" : "#dc2626" }}>
-          {event.registration}
-        </span>};
+  const handleEdit = (event) => {
+    setEditingEvent(event);
+    setEditFormData({
+      tournamentDate: event.tournamentDate,
+      pdga: event.pdga,
+      tournamentTitle: event.tournamentTitle,
+      region: event.region,
+      registration: event.registration
+    });
+    setEditDialogOpen(true);
+  };
+
+  const handleEditFormChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleEditSubmit = () => {
+    fetch(`${config.discGolfServiceUrl}/events/${editingEvent.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify(editFormData)
     })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to edit event');
+        }
+        return response.json();
+      })
+      .then(() => {
+        setSnackbar({
+          open: true,
+          message: "Successfully edited event",
+          severity: "success"
+        });
+        setEditDialogOpen(false);
+        fetchEvents();
+      })
+      .catch(error => {
+        console.error('Error editing event:', error);
+        setSnackbar({
+          open: true,
+          message: "Failed to edit event",
+          severity: "error"
+        });
+      });
   };
 
   return (
@@ -164,12 +226,22 @@ const DiscGolfEventsComponent = () => {
           ? (<ReusableTable
               title="Disc Golf Events"
               columns={columns}
-              rows={renderVisual(discGolfEvents)}
+              rows={discGolfEvents}
               currentSort={currentSort}
               onSort={createSortHandler}
               renderActions={(row) => (
-                  // TODO isRegistered is nowwhere defined
-                  row.isRegistered ? (
+                  <>
+                      <Button
+                          variant="outlined"
+                          color="primary"
+                          size="small"
+                          onClick={() => handleEdit(row)}
+                          sx={{ mr: 1 }}
+                      >
+                          Edit
+                      </Button>
+                  {/*TODO isRegistered is nowhere defined*/}
+                  {row.isRegistered ? (
                       <Button
                           variant="outlined"
                           color="error"
@@ -188,13 +260,77 @@ const DiscGolfEventsComponent = () => {
                       >
                         Register
                       </Button>
-                  )
+                  )}
+                  </>
               )}
           />)
           : (loading === false && <Alert severity="info" sx={{maxWidth: 600, margin: "20px auto"}}>
             You haven't registered for any events yet.
           </Alert>)
       }
+
+      <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
+        <DialogTitle>Edit Event</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="Tournament Date"
+            type="date"
+            fullWidth
+            name="tournamentDate"
+            value={editFormData.tournamentDate}
+            onChange={handleEditFormChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            margin="dense"
+            label="PDGA"
+            type="text"
+            fullWidth
+            name="pdga"
+            value={editFormData.pdga}
+            onChange={handleEditFormChange}
+          />
+          <TextField
+            margin="dense"
+            label="Tournament Title"
+            type="text"
+            fullWidth
+            name="tournamentTitle"
+            value={editFormData.tournamentTitle}
+            onChange={handleEditFormChange}
+          />
+          <TextField
+            margin="dense"
+            label="Region"
+            type="text"
+            fullWidth
+            name="region"
+            value={editFormData.region}
+            onChange={handleEditFormChange}
+          />
+          <TextField
+            margin="dense"
+            label="Registration"
+            select
+            fullWidth
+            name="registration"
+            value={editFormData.registration}
+            onChange={handleEditFormChange}
+          >
+            <MenuItem value="OPEN">OPEN</MenuItem>
+            <MenuItem value="CLOSED">CLOSED</MenuItem>
+          </TextField>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleEditSubmit} color="primary">
+            Save Changes
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Snackbar
         open={snackbar.open}
