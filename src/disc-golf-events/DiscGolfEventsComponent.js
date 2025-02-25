@@ -156,23 +156,15 @@ const DiscGolfEventsComponent = () => {
   }
 
   const columns = [
-    { header: "Tournament Date", field: "tournamentDate" },
+    { header: "Tournament Date", field: "tournamentDate", visual: (event) => formatDate(event.tournamentDate) },
     { header: "PDGA", field: "pdga" },
     { header: "Tournament Title", field: "tournamentTitle" },
     { header: "Region", field: "region" },
-    { header: "Registration", field: "registration" },
+    { header: "Registration", field: "registration", visual: (event) => <span style={{ color: event.registration === "Open" ? "#16a34a" : "#dc2626" }}>
+          {event.registration}
+        </span> },
     { header: "Vacancies", field: "vacancies" },
   ];
-
-  const renderVisual = (myEvents) => {
-    return myEvents.map((event) => {
-      return {...event,
-        tournamentDate: formatDate(event.tournamentDate),
-        registration: <span style={{ color: event.registration === "Open" ? "#16a34a" : "#dc2626" }}>
-          {event.registration}
-        </span>};
-    })
-  };
 
   const handleEdit = (event) => {
     setEditingEvent(event);
@@ -234,7 +226,7 @@ const DiscGolfEventsComponent = () => {
           ? (<ReusableTable
               title="Disc Golf Events"
               columns={columns}
-              rows={renderVisual(discGolfEvents)}
+              rows={discGolfEvents}
               currentSort={currentSort}
               onSort={createSortHandler}
               renderActions={(row) => (
@@ -243,13 +235,13 @@ const DiscGolfEventsComponent = () => {
                           variant="outlined"
                           color="primary"
                           size="small"
-                          onClick={() => handleEdit(event)}
+                          onClick={() => handleEdit(row)}
                           sx={{ mr: 1 }}
                       >
                           Edit
                       </Button>
-                  // TODO isRegistered is nowhere defined
-                  row.isRegistered ? (
+                  {/*TODO isRegistered is nowhere defined*/}
+                  {row.isRegistered ? (
                       <Button
                           variant="outlined"
                           color="error"
@@ -268,7 +260,7 @@ const DiscGolfEventsComponent = () => {
                       >
                         Register
                       </Button>
-                  )
+                  )}
                   </>
               )}
           />)
