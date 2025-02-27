@@ -17,7 +17,7 @@ const DiscGolfEventsComponent = () => {
   const [discGolfEvents, setDiscGolfEvents] = useState([]);
   const [currentSort, setCurrentSort] = useState({});
   const [error, setError] = useState(null);
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, isAdmin } = useContext(AuthContext);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
@@ -231,15 +231,15 @@ const DiscGolfEventsComponent = () => {
               onSort={createSortHandler}
               renderActions={(row) => (
                   <>
-                      <Button
-                          variant="outlined"
-                          color="primary"
-                          size="small"
-                          onClick={() => handleEdit(row)}
-                          sx={{ mr: 1 }}
-                      >
-                          Edit
-                      </Button>
+                    {isAdmin() && <Button
+                        variant="outlined"
+                        color="primary"
+                        size="small"
+                        onClick={() => handleEdit(row)}
+                        sx={{ mr: 1 }}
+                    >
+                      Edit
+                    </Button>}
                   {/*TODO isRegistered is nowhere defined*/}
                   {row.isRegistered ? (
                       <Button
