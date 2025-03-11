@@ -1,11 +1,18 @@
-import {createContext, useEffect, useState} from "react";
+import React, {createContext, useEffect, useState} from "react";
 import config from "../config";
 
-const AuthContext = createContext();
+const AuthContext = createContext({
+  isLoggedIn: false,
+  isAdmin: () => false,
+  login: () => {},
+  logout: () => {},
+});
 
-function AuthProvider({ children }) {
+import { ReactNode } from "react";
+
+function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userSession, setUserSession] = useState({});
+  const [userSession, setUserSession] = useState<any>({});
 
   const checkSession = async () => {
     const currentSessionResponse = await fetch(`${config.apiUrl}/current-session`, {
