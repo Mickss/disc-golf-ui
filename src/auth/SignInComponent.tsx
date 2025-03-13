@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import { Button, TextField, Link, Grid, Box, Typography } from "@mui/material";
+import { Button, TextField, Link, Box, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { AuthContext } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -7,7 +8,7 @@ function SignInComponent() {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const loginData = {
@@ -77,12 +78,12 @@ function SignInComponent() {
           Sign In
         </Button>
         <Grid container>
-          <Grid item xs>
+          <Grid size="grow">
             <Link href="#" variant="body2">
               Forgot password?
             </Link>
           </Grid>
-          <Grid item>
+          <Grid>
             <Link href="#" variant="body2">
               {"Don't have an account? Sign Up"}
             </Link>
