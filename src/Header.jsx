@@ -5,12 +5,13 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./auth/AuthContext";
+import config from "./config";
 
 const Header = () => {
   const { logout, isLoggedIn } = useContext(AuthContext);
 
   const handleLogout = () => {
-    fetch(`${authServiceUrl}/public/auth/logout`, {
+    fetch(`${config.authServiceUrl}/public/auth/logout`, {
       method: "post",
       credentials: "include",
       body: {},
