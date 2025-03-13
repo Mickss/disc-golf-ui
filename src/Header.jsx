@@ -10,7 +10,7 @@ const Header = () => {
   const { logout, isLoggedIn } = useContext(AuthContext);
 
   const handleLogout = () => {
-    fetch("http://localhost:24001/api/axion-auth-service/public/auth/logout", {
+    fetch(`${authServiceUrl}/public/auth/logout`, {
       method: "post",
       credentials: "include",
       body: {},
