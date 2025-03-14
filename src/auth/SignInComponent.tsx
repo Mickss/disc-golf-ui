@@ -3,6 +3,7 @@ import { Button, TextField, Link, Box, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { AuthContext } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
+import config from "../config";
 
 function SignInComponent() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function SignInComponent() {
       password: data.get("password"),
     };
 
-    fetch("http://localhost:24001/api/axion-auth-service/public/auth/login", {
+    fetch(`${config.authServiceUrl}/public/auth/login`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
