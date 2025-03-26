@@ -8,14 +8,22 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import TableSortLabel from "@mui/material/TableSortLabel";
+import { Sort } from "../disc-golf-events/Sort";
 
-const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderActions }) => {
-    const sortHandler = (field) => async () => {
-        const isAscending = currentSort.field === field && currentSort.direction === "asc";
+const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderActions }: { 
+    title?: string, 
+    columns: { header: string, field: string, align?: "left" | "right" | "center", visual?: (row: any) => any }[], 
+    rows: any[], 
+    currentSort?: Sort, 
+    onSort?: (currentSort: Sort) => void, 
+    renderActions?: (row: any) => any }
+) => {
+    const sortHandler = (field: string) => async () => {
+        const isAscending = currentSort && currentSort.field === field && currentSort.direction === "asc";
         const newDirection = isAscending ? "desc" : "asc";
 
         if (onSort) {
-            await onSort(field, newDirection);
+            await onSort({field: field, direction: newDirection});
         }
     };
 
@@ -33,8 +41,8 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                             {columns.map((column) => (
                                 <TableCell key={column.header}>
                                     {onSort ? <TableSortLabel
-                                        active={currentSort.field === column.field}
-                                        direction={currentSort.field === column.field ? currentSort.direction : "asc"}
+                                        active={currentSort && currentSort.field === column.field}
+                                        direction={currentSort && currentSort.field === column.field ? currentSort.direction : "asc"}
                                         onClick={sortHandler(column.field)}
                                     >
                                         {column.header}

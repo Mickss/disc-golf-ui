@@ -7,37 +7,38 @@ import config from "../config";
 import ReusableTable from "../components/ReusableTable";
 import {useLoading} from "../spinner/LoadingProvider";
 import EditEventDialog from "./EditEventDialog.js";
+import { DiscGolfEvent } from "./DiscGolfEvent";
+import { SnackbarState } from "./SnackbarState";
+import { Sort } from "./Sort";
 
 const DiscGolfEventsComponent = () => {
   const [discGolfEvents, setDiscGolfEvents] = useState([]);
-  const [currentSort, setCurrentSort] = useState({});
+  const [currentSort, setCurrentSort] = useState<Sort | undefined>();
   const [error, setError] = useState(null);
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [snackbar, setSnackbar] = useState<SnackbarState>({ open: false, message: "", severity: "success" });
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editingEvent, setEditingEvent] = useState(null);
+  const [editingEvent, setEditingEvent] = useState<DiscGolfEvent | null>(null);
 
   const { isLoggedIn, isAdmin } = useContext(AuthContext);
   const { loading, setLoading } = useLoading();
 
-  const createSortHandler = async (sortField, sortDirection) => {
-    setCurrentSort({field: sortField, direction: sortDirection})
+  const createSortHandler = async (currentSort: Sort) => {
+    setCurrentSort({field: currentSort.field, direction: currentSort.direction});
   }
 
-  const fetchEvents = useCallback((valueToOrderBy, orderDirection) => {
+  const fetchEvents = useCallback(() => {
     let url = `${config.discGolfServiceUrl}/public/events`;
-    if (valueToOrderBy) {
-      url += "?valueToOrderBy=" + valueToOrderBy;
-      if (orderDirection) {
-        url += "&orderDirection=" + orderDirection.toUpperCase();
-      }
+    if (currentSort) {
+      url += "?valueToOrderBy=" + currentSort.field;
+      url += "&orderDirection=" + currentSort.direction;
     }
 
     setLoading(true);
     fetch(url)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Received invalid response", response.status);
+          throw new Error(`Received invalid response: ${response.status}`);
         }
         return response.json();
       })
@@ -51,10 +52,10 @@ const DiscGolfEventsComponent = () => {
   }, [setLoading]);
 
   useEffect(() => {
-    fetchEvents(currentSort.field, currentSort.direction);
+    fetchEvents();
   }, [currentSort, fetchEvents]);
 
-  const handleRegister = async (eventId) => {
+  const handleRegister = async (eventId: string) => {
     if (!isLoggedIn) {
       setSnackbar({
         open: true,
@@ -95,7 +96,7 @@ const DiscGolfEventsComponent = () => {
     }
   };
 
-  const handleUnregister = async (eventId) => {
+  const handleUnregister = async (eventId: string) => {
     try {
       const response = await fetch(`${config.discGolfServiceUrl}/events/${eventId}/unregister`, {
         method: 'DELETE',
@@ -126,7 +127,7 @@ const DiscGolfEventsComponent = () => {
     }
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString();
@@ -145,22 +146,22 @@ const DiscGolfEventsComponent = () => {
   }
 
   const columns = [
-    { header: "Tournament Date", field: "tournamentDate", visual: (event) => formatDate(event.tournamentDate) },
+    { header: "Tournament Date", field: "tournamentDate", visual: (event: DiscGolfEvent) => formatDate(event.tournamentDate) },
     { header: "PDGA", field: "pdga" },
     { header: "Tournament Title", field: "tournamentTitle" },
     { header: "Region", field: "region" },
-    { header: "Registration", field: "registration", visual: (event) => <span style={{ color: event.registration === "Open" ? "#16a34a" : "#dc2626" }}>
+    { header: "Registration", field: "registration", visual: (event: DiscGolfEvent) => <span style={{ color: event.registration === "Open" ? "#16a34a" : "#dc2626" }}>
           {event.registration}
         </span> },
     { header: "Vacancies", field: "vacancies" },
   ];
 
-  const handleEdit = (event) => {
+  const handleEdit = (event: DiscGolfEvent) => {
     setEditingEvent(event);
     setEditDialogOpen(true);
   };
 
-  const handleEditSubmit = (event) => {
+  const handleEditSubmit = (event: DiscGolfEvent) => {
     fetch(`${config.discGolfServiceUrl}/events/${event.id}`, {
       method: 'PUT',
       headers: {
@@ -200,7 +201,7 @@ const DiscGolfEventsComponent = () => {
               rows={discGolfEvents}
               currentSort={currentSort}
               onSort={createSortHandler}
-              renderActions={(row) => (
+              renderActions={(row: DiscGolfEvent) => (
                   <>
                     {isAdmin() && <Button
                         variant="outlined"
@@ -212,7 +213,8 @@ const DiscGolfEventsComponent = () => {
                       Edit
                     </Button>}
                   {/*TODO isRegistered is nowhere defined*/}
-                  {row.isRegistered ? (
+                  {/* {row.isRegistered ? ( */}
+                  {false ? (
                       <Button
                           variant="outlined"
                           color="error"
@@ -240,7 +242,7 @@ const DiscGolfEventsComponent = () => {
           </Alert>)
       }
 
-      <EditEventDialog open={editDialogOpen} event={editingEvent} onSave={handleEditSubmit} onCancel={() => setEditDialogOpen(false)}/>
+      {editingEvent && <EditEventDialog open={editDialogOpen} event={editingEvent} onSave={handleEditSubmit} onCancel={() => setEditDialogOpen(false)}/>}
 
       <Snackbar
         open={snackbar.open}
