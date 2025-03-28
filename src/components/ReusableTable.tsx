@@ -9,14 +9,16 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { Sort } from "../disc-golf-events/Sort";
+import { DiscGolfEvent } from "../disc-golf-events/DiscGolfEvent";
+import { TableColumn } from "../disc-golf-events/TableColumn";
 
 const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderActions }: { 
     title?: string, 
-    columns: { header: string, field: string, align?: "left" | "right" | "center", visual?: (row: any) => any }[], 
-    rows: any[], 
+    columns: TableColumn[], 
+    rows: DiscGolfEvent[], 
     currentSort?: Sort, 
     onSort?: (currentSort: Sort) => void, 
-    renderActions?: (row: any) => any }
+    renderActions?: (row: DiscGolfEvent) => any }
 ) => {
     const sortHandler = (field: string) => async () => {
         const isAscending = currentSort && currentSort.field === field && currentSort.direction === "asc";
@@ -58,7 +60,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                             <TableRow key={row.id || rowIndex} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                                 {columns.map((column, colIndex) => (
                                     <TableCell key={colIndex} component="th" scope="row" align={column.align || "left"}>
-                                        {column.visual ? column.visual(row) : row[column.field]}
+                                        {column.visual ? column.visual(row) : row[column.field as keyof DiscGolfEvent]}
                                     </TableCell>
                                 ))}
                                 {renderActions && (
