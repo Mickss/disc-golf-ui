@@ -8,14 +8,24 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import TableSortLabel from "@mui/material/TableSortLabel";
+import { Sort } from "../disc-golf-events/Sort";
+import { DiscGolfEvent } from "../disc-golf-events/DiscGolfEvent";
+import { TableColumn } from "../disc-golf-events/TableColumn";
 
-const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderActions }) => {
-    const sortHandler = (field) => async () => {
-        const isAscending = currentSort.field === field && currentSort.direction === "asc";
+const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderActions }: { 
+    title?: string, 
+    columns: TableColumn[], 
+    rows: DiscGolfEvent[], 
+    currentSort?: Sort, 
+    onSort?: (currentSort: Sort) => void, 
+    renderActions?: (row: DiscGolfEvent) => any }
+) => {
+    const sortHandler = (field: string) => async () => {
+        const isAscending = currentSort && currentSort.field === field && currentSort.direction === "asc";
         const newDirection = isAscending ? "desc" : "asc";
 
         if (onSort) {
-            await onSort(field, newDirection);
+            await onSort({field: field, direction: newDirection});
         }
     };
 
@@ -33,8 +43,8 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                             {columns.map((column) => (
                                 <TableCell key={column.header}>
                                     {onSort ? <TableSortLabel
-                                        active={currentSort.field === column.field}
-                                        direction={currentSort.field === column.field ? currentSort.direction : "asc"}
+                                        active={currentSort && currentSort.field === column.field}
+                                        direction={currentSort && currentSort.field === column.field ? currentSort.direction : "asc"}
                                         onClick={sortHandler(column.field)}
                                     >
                                         {column.header}
@@ -50,7 +60,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                             <TableRow key={row.id || rowIndex} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                                 {columns.map((column, colIndex) => (
                                     <TableCell key={colIndex} component="th" scope="row" align={column.align || "left"}>
-                                        {column.visual ? column.visual(row) : row[column.field]}
+                                        {column.visual ? column.visual(row) : row[column.field as keyof DiscGolfEvent]}
                                     </TableCell>
                                 ))}
                                 {renderActions && (
