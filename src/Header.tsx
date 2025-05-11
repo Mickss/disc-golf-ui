@@ -7,14 +7,14 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "./auth/AuthContext";
 import config from "./config";
 
-const Header = () => {
+const Header: React.FC = () => {
   const { logout, isLoggedIn } = useContext(AuthContext);
 
   const handleLogout = () => {
     fetch(`${config.authServiceUrl}/public/auth/logout`, {
       method: "post",
       credentials: "include",
-      body: {},
+      body: JSON.stringify({}),
     })
       .then(() => {
         console.log("User logged out, setting isLoggedIn to false");
@@ -33,15 +33,20 @@ const Header = () => {
           <Button color="inherit" component={Link} to="/my-events">My Events</Button>
           <Button color="inherit">Contact</Button>
         </Box>
-        <Box>
+        <Box sx={{ display: "flex", gap: 2 }}>
           {isLoggedIn ? (
             <Button color="inherit" onClick={handleLogout}>
               Log out
             </Button>
           ) : (
-            <Button color="inherit" component={Link} to="/sign-in">
-              Sign in
-            </Button>
+            <>
+              <Button color="inherit" component={Link} to="/sign-in">
+                Sign in
+              </Button>
+              <Button color="inherit" component={Link} to="/sign-up">
+                Sign up
+              </Button>
+            </>
           )}
         </Box>
       </Toolbar>
