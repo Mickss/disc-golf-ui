@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Button, TextField, Link, Box, Typography, Alert } from "@mui/material";
+import React, { useContext } from "react";
+import { Button, TextField, Link, Box, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { AuthContext } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -49,7 +49,7 @@ function SignInComponent() {
       <Typography component="h1" variant="h5">
         Sign in
       </Typography>
-      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, maxWidth: 400 }}>
         <TextField
           margin="normal"
           required
@@ -81,11 +81,11 @@ function SignInComponent() {
         <Grid container>
           <Grid size="grow">
             <Link href="#" variant="body2">
-              Forgot password?
+              {"Forgot password?"}
             </Link>
           </Grid>
           <Grid>
-            <Link href="#" variant="body2">
+            <Link href="/sign-up" variant="body2">
               {"Don't have an account? Sign Up"}
             </Link>
           </Grid>

@@ -1,217 +1,98 @@
-import React, { useState, useContext, FormEvent, ChangeEvent } from "react";
-import { 
-  Box, 
-  Button, 
-  TextField, 
-  Typography, 
-  Container, 
-  Paper,
-  Alert,
-  IconButton,
-  InputAdornment
-} from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import { Eye as Visibility, EyeOff as VisibilityOff } from "lucide-react";
-import { AuthContext } from "./AuthContext";  
+import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Button, TextField, Box, Typography, Alert, Link } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import config from "../config";
 
-interface CreateUserRequest {
-  username: string;
-  password: string;
-}
-
-interface AuthError {
-  message: string;
-}
-
-const SignUpComponent: React.FC = () => {
+function SignUpComponent() {
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
-  
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleTogglePasswordVisibility = (): void => {
-    setShowPassword(!showPassword);
-  };
+  const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const email = data.get("email");
+    const password = data.get("password");
+    const repeatPassword = data.get("repeatPassword");
 
-  const handleToggleConfirmPasswordVisibility = (): void => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
-
-  const validateForm = (): boolean => {
-    setError("");
-
-    if (!username.trim()) {
-      setError("Username is required");
-      return false;
-    }
-
-    if (!password) {
-      setError("Password is required");
-      return false;
-    }
-
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return false;
-    }
-
-    if (password !== confirmPassword) {
+    if (password !== repeatPassword) {
       setError("Passwords do not match");
-      return false;
-    }
-
-    return true;
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
       return;
     }
 
-    setLoading(true);
-    
-    try {
-      const requestData: CreateUserRequest = {
-        username: username,
-        password: password
-      };
+    const registerData = {
+      username: email,
+      password: password,
+    };
 
-      const response = await fetch(`${config.authServiceUrl}/public/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(requestData),
+    fetch(`${config.authServiceUrl}/public/auth/register`, {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(registerData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((text) => {
+            throw new Error(text || "HTTP error!");
+          });
+        }
+        return response.text();
+      })
+      .then(() => {
+        navigate("/sign-in");
+      })
+      .catch((err) => {
+        console.error("Register failed:", err);
+        setError("Registration failed: " + err.message);
       });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null) as AuthError | null;
-        throw new Error(errorData?.message || `Registration failed with status: ${response.status}`);
-      }
-      
-      login();
-      navigate("/");
-      
-    } catch (err) {
-      console.error("Registration error:", err);
-      setError(err instanceof Error ? err.message : "Registration failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
   };
 
-  const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) => 
-    (e: ChangeEvent<HTMLInputElement>) => setter(e.target.value);
-
   return (
-    <Container maxWidth="sm">
-      <Paper elevation={3} sx={{ mt: 8, p: 4 }}>
-        <Typography component="h1" variant="h5" align="center" gutterBottom>
-          Create Account
-        </Typography>
-        
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-        
-        <Box component="form" onSubmit={handleSubmit} noValidate>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="username"
-            label="Username"
-            name="username"
-            autoComplete="username"
-            autoFocus
-            value={username}
-            onChange={handleInputChange(setUsername)}
-          />
-          
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type={showPassword ? "text" : "password"}
-            id="password"
-            autoComplete="new-password"
-            value={password}
-            onChange={handleInputChange(setPassword)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleTogglePasswordVisibility}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="confirmPassword"
-            label="Confirm Password"
-            type={showConfirmPassword ? "text" : "password"}
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={handleInputChange(setConfirmPassword)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle confirm password visibility"
-                    onClick={handleToggleConfirmPasswordVisibility}
-                    edge="end"
-                  >
-                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            disabled={loading}
-          >
-            {loading ? "Creating Account..." : "Sign Up"}
-          </Button>
-          
-          <Box sx={{ textAlign: "center", mt: 2 }}>
-            <Typography variant="body2">
-              Already have an account?{" "}
-              <Link to="/sign-in" style={{ textDecoration: "none" }}>
-                Sign in
-              </Link>
-            </Typography>
-          </Box>
-        </Box>
-      </Paper>
-    </Container>
+    <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <Typography component="h1" variant="h5">
+        Sign up
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, maxWidth: 400 }}>
+        {error && <Alert severity="error">{error}</Alert>}
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          label="Email Address"
+          name="email"
+          autoComplete="email"
+          autoFocus
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          label="Password"
+          type={"password"}
+          name="password"
+          autoComplete="new-password"
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          label="Repeat Password"
+          type={"password"}
+          name="repeatPassword"
+        />
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+          Sign Up
+        </Button>
+        <Grid container justifyContent="flex-end">
+          <Grid>
+            <Link href="/sign-in" variant="body2">
+            {"Already have an account? Sign in"}
+            </Link>
+          </Grid>
+        </Grid>
+      </Box>
+    </Box>
   );
 };
 
