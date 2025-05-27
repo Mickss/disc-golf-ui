@@ -31,6 +31,7 @@ const Header: React.FC = () => {
             Home
           </Button>
           <Button color="inherit" component={Link} to="/my-events">My Events</Button>
+          <Button color="inherit" component={Link} to="/users">Users</Button>
           <Button color="inherit">Contact</Button>
         </Box>
         <Box sx={{ display: "flex", gap: 2 }}>
