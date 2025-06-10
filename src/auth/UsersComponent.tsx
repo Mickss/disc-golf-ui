@@ -82,15 +82,9 @@ const UsersComponent: React.FC = () => {
                                             <Select
                                                 value={user.role}
                                                 onChange={(e) => handleRoleChange(user.userId, e.target.value as UserRole)}
-                                                sx={{ 
-                                                    fontSize: '0.75rem',
-                                                    '& .MuiOutlinedInput-notchedOutline': {
-                                                        border: '1px solid #ccc'
-                                                    }
-                                                }}
                                             >
-                                                <MenuItem value="ADMIN" sx={{ fontSize: '0.75rem' }}>ADMIN</MenuItem>
-                                                <MenuItem value="PLAYER" sx={{ fontSize: '0.75rem' }}>PLAYER</MenuItem>
+                                                <MenuItem value="ADMIN">ADMIN</MenuItem>
+                                                <MenuItem value="PLAYER">PLAYER</MenuItem>
                                             </Select>
                                         </FormControl>
                                     </td>
