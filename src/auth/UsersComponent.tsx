@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import config from '../config';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import { AuthContext } from './AuthContext';
 
 type UserRole = 'ADMIN' | 'PLAYER';
 
@@ -15,6 +16,8 @@ const UsersComponent: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const { isAdmin } = useContext(AuthContext);
+    
     useEffect(() => {
         fetch(`${config.authServiceUrl}/public/users/users`)
             .then((res) => {
@@ -31,6 +34,17 @@ const UsersComponent: React.FC = () => {
             });
     }, []);
 
+    const handleRoleEdit = (userId: string, currentRole: UserRole) => {
+        console.log(`Editing role for user ${userId}, current role: ${currentRole}`);
+        const newRole: UserRole = currentRole === 'ADMIN' ? 'PLAYER' : 'ADMIN';
+        // Call API for a change role
+        setUsers(prevUsers => 
+            prevUsers.map(user => 
+                user.userId === userId ? { ...user, role: newRole } : user
+            )
+        );
+    };
+
     if (loading) return <div>Loading users...</div>;
     if (error) return <div>Error: {error}</div>;
 
@@ -38,31 +52,47 @@ const UsersComponent: React.FC = () => {
     <div>
         <Box sx={{ marginTop: 2, marginBottom: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
         <h2>Registered Users</h2>
-        <table style={{ width: '30%', borderCollapse: 'collapse', marginTop: '1rem' }}>
-            <thead>
-                <tr>
-                    <th style={{ border: '1px solid #ccc', padding: '3px' }}>Username</th>
-                    <th style={{ border: '1px solid #ccc', padding: '3px' }}>Role</th>
-                </tr>
-            </thead>
-                <tbody>
-                    {users.map((user) => (
-                        <tr key={user.userId}>
-                            <td style={{ border: '1px solid #ccc', padding: '3px' }}>{user.username}</td>
-                            <td style={{ border: '1px solid #ccc', padding: '3px' }}>
-                                <span style={{
-                                    padding: '2px 4px',
-                                    borderRadius: '2px',
-                                    backgroundColor: user.role === 'ADMIN' ? '#f8d7da' : '#d1e7dd',
-                                    color: user.role === 'ADMIN' ? '#842029' : '#0f5132',
-                                    fontWeight: 'bold'
-                                }}>
-                                    {user.role}
-                                </span>
-                            </td>
+        <table style={{ width: isAdmin() ? '45%' : '30%', borderCollapse: 'collapse', marginTop: '1rem' }}>
+                    <thead>
+                        <tr>
+                            <th style={{ border: '1px solid #ccc', padding: '3px' }}>Username</th>
+                            <th style={{ border: '1px solid #ccc', padding: '3px' }}>Role</th>
+                            {isAdmin() && (
+                                <th style={{ border: '1px solid #ccc', padding: '3px' }}>Actions</th>
+                            )}
                         </tr>
-                    ))}
-                </tbody>
+                    </thead>
+                <tbody>
+                        {users.map((user) => (
+                            <tr key={user.userId}>
+                                <td style={{ border: '1px solid #ccc', padding: '3px' }}>{user.username}</td>
+                                <td style={{ border: '1px solid #ccc', padding: '3px' }}>
+                                    <span style={{
+                                        padding: '2px 4px',
+                                        borderRadius: '2px',
+                                        backgroundColor: user.role === 'ADMIN' ? '#f8d7da' : '#d1e7dd',
+                                        color: user.role === 'ADMIN' ? '#842029' : '#0f5132',
+                                        fontWeight: 'bold'
+                                    }}>
+                                        {user.role}
+                                    </span>
+                                </td>
+                                {isAdmin() && (
+                                    <td style={{ border: '1px solid #ccc', padding: '3px' }}>
+                                        <Button
+                                            size="small"
+                                            variant="outlined"
+                                            color="primary"
+                                            onClick={() => handleRoleEdit(user.userId, user.role)}
+                                            sx={{ fontSize: '0.75rem', padding: '2px 8px' }}
+                                        >
+                                            Edit Role
+                                        </Button>
+                                    </td>
+                                )}
+                            </tr>
+                        ))}
+                    </tbody>
             </table>
         </Box>
     </div>
