@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import config from '../config';
-import { Box, Button } from '@mui/material';
+import { Box, MenuItem, FormControl, Select } from '@mui/material';
 import { AuthContext } from './AuthContext';
 
 type UserRole = 'ADMIN' | 'PLAYER';
@@ -34,9 +34,8 @@ const UsersComponent: React.FC = () => {
             });
     }, []);
 
-    const handleRoleEdit = (userId: string, currentRole: UserRole) => {
-        console.log(`Editing role for user ${userId}, current role: ${currentRole}`);
-        const newRole: UserRole = currentRole === 'ADMIN' ? 'PLAYER' : 'ADMIN';
+    const handleRoleChange = (userId: string, newRole: UserRole) => {
+        console.log(`Changing role for user ${userId} to: ${newRole}`);
         // Call API for a change role
         setUsers(prevUsers => 
             prevUsers.map(user => 
@@ -79,15 +78,15 @@ const UsersComponent: React.FC = () => {
                                 </td>
                                 {isAdmin() && (
                                     <td style={{ border: '1px solid #ccc', padding: '3px' }}>
-                                        <Button
-                                            size="small"
-                                            variant="outlined"
-                                            color="primary"
-                                            onClick={() => handleRoleEdit(user.userId, user.role)}
-                                            sx={{ fontSize: '0.75rem', padding: '2px 8px' }}
-                                        >
-                                            Edit Role
-                                        </Button>
+                                        <FormControl size="small" sx={{ minWidth: 100 }}>
+                                            <Select
+                                                value={user.role}
+                                                onChange={(e) => handleRoleChange(user.userId, e.target.value as UserRole)}
+                                            >
+                                                <MenuItem value="ADMIN">ADMIN</MenuItem>
+                                                <MenuItem value="PLAYER">PLAYER</MenuItem>
+                                            </Select>
+                                        </FormControl>
                                     </td>
                                 )}
                             </tr>
