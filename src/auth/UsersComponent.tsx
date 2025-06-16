@@ -26,6 +26,7 @@ const UsersComponent: React.FC = () => {
   const { setLoading: setGlobalLoading } = useLoading();
 
   useEffect(() => {
+    setGlobalLoading(true);
     fetch(`${config.authServiceUrl}/public/users/users`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch users");
