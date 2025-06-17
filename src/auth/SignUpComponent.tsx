@@ -21,7 +21,7 @@ function SignUpComponent() {
     }
 
     const registerData = {
-      username: email,
+      email: email,
       password: password,
     };
 
