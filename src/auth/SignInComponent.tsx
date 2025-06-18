@@ -13,7 +13,7 @@ function SignInComponent() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const loginData = {
-      username: data.get("email"),
+      email: data.get("email"),
       password: data.get("password"),
     };
 

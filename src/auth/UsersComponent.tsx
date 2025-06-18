@@ -9,7 +9,7 @@ type UserRole = "ADMIN" | "PLAYER";
 
 type User = {
   userId: string;
-  username: string;
+  email: string;
   role: UserRole;
 };
 
@@ -112,7 +112,7 @@ const UsersComponent: React.FC = () => {
           <thead>
             <tr>
               <th style={{ border: "1px solid #ccc", padding: "3px" }}>
-                Username
+                  Email Address
               </th>
               <th style={{ border: "1px solid #ccc", padding: "3px" }}>Role</th>
               {isAdmin() && (
@@ -126,7 +126,7 @@ const UsersComponent: React.FC = () => {
             {users.map((user) => (
               <tr key={user.userId}>
                 <td style={{ border: "1px solid #ccc", padding: "3px" }}>
-                  {user.username}
+                  {user.email}
                 </td>
                 <td style={{ border: "1px solid #ccc", padding: "3px" }}>
                   <span
