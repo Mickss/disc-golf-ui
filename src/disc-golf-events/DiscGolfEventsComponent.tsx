@@ -1,12 +1,13 @@
-import React, {useEffect, useState, useContext, useCallback} from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import { AuthContext } from "../auth/AuthContext";
+import { Button, Dialog, DialogContent } from "@mui/material";
 import Alert from "@mui/material/Alert";
-import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import config from "../config";
 import ReusableTable from "../components/ReusableTable";
-import {useLoading} from "../spinner/LoadingProvider";
+import { useLoading } from "../spinner/LoadingProvider";
 import EditEventDialog from "./EditEventDialog.js";
+import AddEventComponent from "./AddEventComponent";
 import { DiscGolfEvent } from "./DiscGolfEvent";
 import { SnackbarState } from "./SnackbarState";
 import { Sort } from "./Sort";
@@ -19,19 +20,21 @@ const DiscGolfEventsComponent = () => {
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<DiscGolfEvent | null>(null);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
 
   const { isLoggedIn, isAdmin } = useContext(AuthContext);
   const { loading, setLoading } = useLoading();
 
-  const createSortHandler = async (currentSort: Sort) => {
-    setCurrentSort({field: currentSort.field, direction: currentSort.direction});
+  const createSortHandler = (newSort: Sort) => {
+    setCurrentSort({ field: newSort.field, direction: newSort.direction });
   }
 
   const fetchEvents = useCallback(() => {
     let url = `${config.discGolfServiceUrl}/public/events`;
     if (currentSort) {
-      url += "?valueToOrderBy=" + currentSort.field;
-      url += "&orderDirection=" + currentSort.direction;
+      url += `?valueToOrderBy=${currentSort.field}`;
+      const direction = currentSort.direction.toUpperCase();
+      url += `&orderDirection=${direction}`;
     }
 
     setLoading(true);
@@ -49,7 +52,7 @@ const DiscGolfEventsComponent = () => {
       }).finally(() => {
         setLoading(false);
       });
-  }, [setLoading]);
+  }, [setLoading, currentSort]);
 
   useEffect(() => {
     fetchEvents();
@@ -84,7 +87,7 @@ const DiscGolfEventsComponent = () => {
         message: "Successfully registered for event",
         severity: "success"
       });
-      
+
       fetchEvents();
     } catch (error) {
       console.error("Error registering:", error);
@@ -115,7 +118,7 @@ const DiscGolfEventsComponent = () => {
         message: "Successfully unregistered from event",
         severity: "success"
       });
-      
+
       fetchEvents();
     } catch (error) {
       console.error('Error unregistering:', error);
@@ -150,9 +153,11 @@ const DiscGolfEventsComponent = () => {
     { header: "PDGA", field: "pdga" },
     { header: "Tournament Title", field: "tournamentTitle" },
     { header: "Region", field: "region" },
-    { header: "Registration", field: "registration", visual: (event: DiscGolfEvent) => <span style={{ color: event.registration === "Open" ? "#16a34a" : "#dc2626" }}>
-          {event.registration}
-        </span> },
+    {
+      header: "Registration", field: "registration", visual: (event: DiscGolfEvent) => <span style={{ color: event.registration === "Open" ? "#16a34a" : "#dc2626" }}>
+        {event.registration}
+      </span>
+    },
     { header: "Vacancies", field: "vacancies" },
   ];
 
@@ -195,54 +200,75 @@ const DiscGolfEventsComponent = () => {
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
       {discGolfEvents.length > 0
-          ? (<ReusableTable
-              title="Disc Golf Events"
-              columns={columns}
-              rows={discGolfEvents}
-              currentSort={currentSort}
-              onSort={createSortHandler}
-              renderActions={(row: DiscGolfEvent) => (
-                  <>
-                    {isAdmin() && <Button
-                        variant="outlined"
-                        color="primary"
-                        size="small"
-                        onClick={() => handleEdit(row)}
-                        sx={{ mr: 1 }}
-                    >
-                      Edit
-                    </Button>}
-                  {/*TODO isRegistered is nowhere defined*/}
-                  {/* {row.isRegistered ? ( */}
-                  {false ? (
-                      <Button
-                          variant="outlined"
-                          color="error"
-                          size="small"
-                          onClick={() => handleUnregister(row.id)}
-                      >
-                        Unregister
-                      </Button>
-                  ) : (
-                      <Button
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          onClick={() => handleRegister(row.id)}
-                          disabled={!isLoggedIn}
-                      >
-                        Register
-                      </Button>
-                  )}
-                  </>
+        ? (<ReusableTable
+          title="Disc Golf Events"
+          columns={columns}
+          rows={discGolfEvents}
+          currentSort={currentSort}
+          onSort={createSortHandler}
+          renderActions={(row: DiscGolfEvent) => (
+            <>
+              {isAdmin() && <Button
+                variant="outlined"
+                color="primary"
+                size="small"
+                onClick={() => handleEdit(row)}
+                sx={{ mr: 1 }}
+              >
+                Edit
+              </Button>}
+              {/*TODO isRegistered is nowhere defined*/}
+              {/* {row.isRegistered ? ( */}
+              {false ? (
+                <Button
+                  variant="outlined"
+                  color="error"
+                  size="small"
+                  onClick={() => handleUnregister(row.id)}
+                >
+                  Unregister
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  onClick={() => handleRegister(row.id)}
+                  disabled={!isLoggedIn}
+                >
+                  Register
+                </Button>
               )}
-          />)
-          : (loading === false && <Alert severity="info" sx={{maxWidth: 600, margin: "20px auto"}}>
-            You haven't registered for any events yet.
-          </Alert>)
+            </>
+          )}
+        />)
+        : (loading === false && <Alert severity="info" sx={{ maxWidth: 600, margin: "20px auto" }}>
+          You haven't registered for any events yet.
+        </Alert>)
       }
+      {isAdmin() && (
+        <div style={{ marginTop: "20px", textAlign: "center" }}>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => setAddDialogOpen(true)}
+          >
+            Add Event
+          </Button>
+        </div>
+      )}
 
-      {editingEvent && <EditEventDialog open={editDialogOpen} event={editingEvent} onSave={handleEditSubmit} onCancel={() => setEditDialogOpen(false)}/>}
+      <Dialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogContent>
+          <AddEventComponent
+            onClose={() => setAddDialogOpen(false)}
+            onEventAdded={fetchEvents}
+            setSnackbar={setSnackbar}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {editingEvent && <EditEventDialog open={editDialogOpen} event={editingEvent} onSave={handleEditSubmit} onCancel={() => setEditDialogOpen(false)} />}
 
       <Snackbar
         open={snackbar.open}
