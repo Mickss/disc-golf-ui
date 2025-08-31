@@ -10,6 +10,7 @@ import UsersComponent from "./auth/UsersComponent";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import MyEvents from "./disc-golf-events/MyEvents";
+import HiddenEventsPage from "./disc-golf-events/HiddenEventsPage";
 import React from "react";
 import GlobalLoading from "./spinner/GlobalLoading";
 
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/my-events" element={<MyEvents />} />
         <Route path="/sign-up" element={<SignUpComponent />} />
         <Route path="/users" element={<UsersComponent />} />
+        <Route path="/hidden-events" element={<HiddenEventsPage />} />
       </Routes>
     </ThemeProvider>
   );

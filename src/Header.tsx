@@ -8,7 +8,7 @@ import { AuthContext } from "./auth/AuthContext";
 import config from "./config";
 
 const Header: React.FC = () => {
-  const { logout, isLoggedIn } = useContext(AuthContext);
+  const { logout, isLoggedIn, isAdmin } = useContext(AuthContext);
 
   const handleLogout = () => {
     fetch(`${config.authServiceUrl}/public/auth/logout`, {
@@ -32,6 +32,11 @@ const Header: React.FC = () => {
           </Button>
           <Button color="inherit" component={Link} to="/my-events">My Events</Button>
           <Button color="inherit" component={Link} to="/users">Users</Button>
+          {isAdmin() && (
+            <Button color="inherit" component={Link} to="/hidden-events">
+              Hidden Events
+            </Button>
+          )}
           <Button color="inherit">Contact</Button>
         </Box>
         <Box sx={{ display: "flex", gap: 2 }}>

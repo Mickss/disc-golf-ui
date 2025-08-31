@@ -22,12 +22,33 @@ const DiscGolfEventsComponent = () => {
   const [editingEvent, setEditingEvent] = useState<DiscGolfEvent | null>(null);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
 
+  const [hiddenEvents, setHiddenEvents] = useState<string[]>(() => {
+    const saved = localStorage.getItem('hiddenEvents');
+    return saved ? JSON.parse(saved) : [];
+  });
+
   const { isLoggedIn, isAdmin } = useContext(AuthContext);
   const { loading, setLoading } = useLoading();
 
   const createSortHandler = (newSort: Sort) => {
     setCurrentSort({ field: newSort.field, direction: newSort.direction });
   }
+
+  const toggleEventVisibility = (eventId: string, eventTitle: string) => {
+    let newHiddenEvents: string[];
+
+    if (hiddenEvents.includes(eventId)) {
+      newHiddenEvents = hiddenEvents.filter(id => id !== eventId);
+    } else {
+      if (window.confirm(`Are you sure you want to hide "${eventTitle}"?`)) {
+        newHiddenEvents = [...hiddenEvents, eventId];
+      } else {
+        return;
+      }
+    }
+    setHiddenEvents(newHiddenEvents);
+    localStorage.setItem('hiddenEvents', JSON.stringify(newHiddenEvents));
+  };
 
   const fetchEvents = useCallback(() => {
     let url = `${config.discGolfServiceUrl}/public/events`;
@@ -197,13 +218,17 @@ const DiscGolfEventsComponent = () => {
       });
   };
 
+  const visibleEvents = discGolfEvents.filter((event: DiscGolfEvent) =>
+    !hiddenEvents.includes(event.id)
+  );
+
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
       {discGolfEvents.length > 0
         ? (<ReusableTable
           title="Disc Golf Events"
           columns={columns}
-          rows={discGolfEvents}
+          rows={visibleEvents}
           currentSort={currentSort}
           onSort={createSortHandler}
           renderActions={(row: DiscGolfEvent) => (
@@ -217,6 +242,17 @@ const DiscGolfEventsComponent = () => {
               >
                 Edit
               </Button>}
+              {isAdmin() && (
+                <Button
+                  variant="outlined"
+                  color={hiddenEvents.includes(row.id) ? "success" : "warning"}
+                  size="small"
+                  onClick={() => toggleEventVisibility(row.id, row.tournamentTitle)}
+                  sx={{ mr: 1 }}
+                >
+                  {hiddenEvents.includes(row.id) ? "Show" : "Hide"}
+                </Button>
+              )}
               {/*TODO isRegistered is nowhere defined*/}
               {/* {row.isRegistered ? ( */}
               {false ? (
