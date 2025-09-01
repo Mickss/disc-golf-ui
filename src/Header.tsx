@@ -8,7 +8,7 @@ import { AuthContext } from "./auth/AuthContext";
 import config from "./config";
 
 const Header: React.FC = () => {
-  const { logout, isLoggedIn } = useContext(AuthContext);
+  const { logout, isLoggedIn, isAdmin } = useContext(AuthContext);
 
   const handleLogout = () => {
     fetch(`${config.authServiceUrl}/public/auth/logout`, {

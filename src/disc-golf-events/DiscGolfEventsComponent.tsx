@@ -22,12 +22,55 @@ const DiscGolfEventsComponent = () => {
   const [editingEvent, setEditingEvent] = useState<DiscGolfEvent | null>(null);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
 
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [confirmModalConfig, setConfirmModalConfig] = useState<{
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    confirmText?: string;
+    cancelText?: string;
+  } | null>(null);
+
   const { isLoggedIn, isAdmin } = useContext(AuthContext);
   const { loading, setLoading } = useLoading();
 
   const createSortHandler = (newSort: Sort) => {
     setCurrentSort({ field: newSort.field, direction: newSort.direction });
   }
+
+  const deleteEvent = async (eventId: string, eventTitle: string) => {
+  const confirmed = window.confirm(`Are you sure you want to permanently delete "${eventTitle}"? This action cannot be undone.`);
+  if (!confirmed) return;
+
+  try {
+    const response = await fetch(`${config.discGolfServiceUrl}/events/${eventId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete event');
+    }
+
+    setSnackbar({
+      open: true,
+      message: "Event deleted successfully",
+      severity: "success"
+    });
+
+    fetchEvents();
+  } catch (error) {
+    console.error('Error deleting event:', error);
+    setSnackbar({
+      open: true,
+      message: "Failed to delete event",
+      severity: "error"
+    });
+  }
+};
 
   const fetchEvents = useCallback(() => {
     let url = `${config.discGolfServiceUrl}/public/events`;
@@ -217,6 +260,17 @@ const DiscGolfEventsComponent = () => {
               >
                 Edit
               </Button>}
+              {isAdmin() && (
+                <Button
+                  variant="outlined"
+                  color="error"
+                  size="small"
+                  onClick={() => deleteEvent(row.id, row.tournamentTitle)}
+                  sx={{ mr: 1 }}
+                >
+                  Delete
+                </Button>
+              )}
               {/*TODO isRegistered is nowhere defined*/}
               {/* {row.isRegistered ? ( */}
               {false ? (
