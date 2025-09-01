@@ -11,6 +11,7 @@ import AddEventComponent from "./AddEventComponent";
 import { DiscGolfEvent } from "./DiscGolfEvent";
 import { SnackbarState } from "./SnackbarState";
 import { Sort } from "./Sort";
+import ConfirmationModal from "./ConfirmationModal";
 
 const DiscGolfEventsComponent = () => {
   const [discGolfEvents, setDiscGolfEvents] = useState([]);
@@ -38,39 +39,51 @@ const DiscGolfEventsComponent = () => {
     setCurrentSort({ field: newSort.field, direction: newSort.direction });
   }
 
-  const deleteEvent = async (eventId: string, eventTitle: string) => {
-  const confirmed = window.confirm(`Are you sure you want to permanently delete "${eventTitle}"? This action cannot be undone.`);
-  if (!confirmed) return;
+  const deleteEvent = (eventId: string, eventTitle: string) => {
+    setConfirmModalConfig({
+      title: "Delete Event",
+      message: `Are you sure you want to permanently delete "${eventTitle}"? This action cannot be undone.`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      onConfirm: async () => {
+        try {
+          const response = await fetch(`${config.discGolfServiceUrl}/events/${eventId}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+          });
 
-  try {
-    const response = await fetch(`${config.discGolfServiceUrl}/events/${eventId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
+          if (!response.ok) {
+            throw new Error('Failed to delete event');
+          }
+
+          setSnackbar({
+            open: true,
+            message: "Event deleted successfully",
+            severity: "success"
+          });
+
+          fetchEvents();
+        } catch (error) {
+          console.error('Error deleting event:', error);
+          setSnackbar({
+            open: true,
+            message: "Failed to delete event",
+            severity: "error"
+          });
+        }
+        handleConfirmModalClose();
+      }
     });
+    setConfirmModalOpen(true);
+  };
 
-    if (!response.ok) {
-      throw new Error('Failed to delete event');
-    }
-
-    setSnackbar({
-      open: true,
-      message: "Event deleted successfully",
-      severity: "success"
-    });
-
-    fetchEvents();
-  } catch (error) {
-    console.error('Error deleting event:', error);
-    setSnackbar({
-      open: true,
-      message: "Failed to delete event",
-      severity: "error"
-    });
-  }
-};
+  const handleConfirmModalClose = () => {
+    setConfirmModalOpen(false);
+    setConfirmModalConfig(null);
+  };
 
   const fetchEvents = useCallback(() => {
     let url = `${config.discGolfServiceUrl}/public/events`;
@@ -324,6 +337,18 @@ const DiscGolfEventsComponent = () => {
 
       {editingEvent && <EditEventDialog open={editDialogOpen} event={editingEvent} onSave={handleEditSubmit} onCancel={() => setEditDialogOpen(false)} />}
 
+      {confirmModalConfig && (
+        <ConfirmationModal
+          open={confirmModalOpen}
+          title={confirmModalConfig.title}
+          message={confirmModalConfig.message}
+          onConfirm={confirmModalConfig.onConfirm}
+          onCancel={handleConfirmModalClose}
+          confirmText={confirmModalConfig.confirmText}
+          cancelText={confirmModalConfig.cancelText}
+          confirmColor="error"
+        />
+      )}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
