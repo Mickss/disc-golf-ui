@@ -222,6 +222,38 @@ const DiscGolfEventsComponent = () => {
     setEditDialogOpen(true);
   };
 
+  const handleExport = async () => {
+  try {
+    const response = await fetch(`${config.discGolfServiceUrl}/export/events`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Export failed: ${response.status}`);
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "events.xlsx");
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } catch (error) {
+    console.error("Export error:", error);
+    setSnackbar({
+      open: true,
+      message: "Failed to export events",
+      severity: "error",
+    });
+  }
+};
+
   const handleEditSubmit = (event: DiscGolfEvent) => {
     fetch(`${config.discGolfServiceUrl}/events/${event.id}`, {
       method: 'PUT',
@@ -255,6 +287,17 @@ const DiscGolfEventsComponent = () => {
 
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
+    {isAdmin() && (
+      <div style={{ marginBottom: "20px", textAlign: "right" }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleExport}
+        >
+          Export Events
+        </Button>
+      </div>
+    )}
       {discGolfEvents.length > 0
         ? (<ReusableTable
           title="Disc Golf Events"
