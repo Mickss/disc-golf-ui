@@ -224,11 +224,8 @@ const DiscGolfEventsComponent = () => {
 
   const handleExport = async () => {
   try {
-    const response = await fetch(`${config.discGolfServiceUrl}/export/events`, {
+    const response = await fetch(`${config.discGolfServiceUrl}/events/export`, {
       method: "GET",
-      headers: {
-        'Content-Type': 'application/json'
-      },
       credentials: "include",
     });
 
@@ -240,10 +237,17 @@ const DiscGolfEventsComponent = () => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "events.xlsx");
+    link.download = "events.xlsx";
     document.body.appendChild(link);
     link.click();
-    link.remove();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    setSnackbar({
+      open: true,
+      message: "Export successful",
+      severity: "success",
+    });
   } catch (error) {
     console.error("Export error:", error);
     setSnackbar({
@@ -251,6 +255,41 @@ const DiscGolfEventsComponent = () => {
       message: "Failed to export events",
       severity: "error",
     });
+  }
+};
+
+const handleImport = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  setLoading(true);
+
+  try {
+    const response = await fetch(`${config.discGolfServiceUrl}/events/import`, {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Import failed: ${response.status}`);
+    }
+
+    setSnackbar({
+      open: true,
+      message: "Import successful",
+      severity: "success",
+    });
+    fetchEvents();
+  } catch (error) {
+    console.error("Import error:", error);
+    setSnackbar({
+      open: true,
+      message: "Failed to import events",
+      severity: "error",
+    });
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -292,10 +331,31 @@ const DiscGolfEventsComponent = () => {
         <Button
           variant="contained"
           color="primary"
+          sx={{ mr: 2 }}
           onClick={handleExport}
         >
           Export Events
         </Button>
+        <input
+          type="file"
+          accept=".xlsx"
+          onChange={(e) => {
+            if (e.target.files?.length) {
+              handleImport(e.target.files[0]);
+            }
+          }}
+          style={{ display: "none" }}
+          id="import-input"
+        />
+        <label htmlFor="import-input">
+          <Button
+            variant="contained"
+            component="span"
+            color="secondary"
+          >
+            Import Events
+          </Button>
+        </label>
       </div>
     )}
       {discGolfEvents.length > 0
