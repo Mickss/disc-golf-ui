@@ -32,7 +32,7 @@ const Header: React.FC = () => {
           </Button>
           <Button color="inherit" component={Link} to="/my-events">My Events</Button>
           <Button color="inherit" component={Link} to="/users">Users</Button>
-          <Button color="inherit">Contact</Button>
+          <Button color="inherit" component={Link} to="/contact">Contact</Button>
         </Box>
         <Box sx={{ display: "flex", gap: 2 }}>
           {isLoggedIn ? (
