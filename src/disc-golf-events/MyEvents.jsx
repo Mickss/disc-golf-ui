@@ -5,6 +5,7 @@ import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import ReusableTable from "../components/ReusableTable";
 import {useLoading} from "../spinner/LoadingProvider";
+import config from "../config";
 
 const MyEvents = () => {
   const [myEvents, setMyEvents] = useState([]);
@@ -16,7 +17,7 @@ const MyEvents = () => {
   const fetchEvents = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:24001/api/disc-golf-service/events/my-events", {
+      const response = await fetch(`${config.discGolfServiceUrl}/events/my-events`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
@@ -47,7 +48,7 @@ const MyEvents = () => {
 
   const handleUnregister = async (eventId) => {
     try {
-      const response = await fetch(`http://localhost:24001/api/disc-golf-service/events/${eventId}/unregister`, {
+      const response = await fetch(`${config.discGolfServiceUrl}/events/${eventId}/unregister`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
