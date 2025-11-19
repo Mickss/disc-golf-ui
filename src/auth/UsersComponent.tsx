@@ -92,16 +92,25 @@ const UsersComponent: React.FC = () => {
 
   return (
     <div>
-      <Box
-        sx={{
-          marginTop: 2,
-          marginBottom: 2,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <h2>Registered Users</h2>
+      {!isAdmin() ? (
+        <Alert 
+          severity="warning" 
+          sx={{ maxWidth: 600, margin: "20px auto" }}
+        >
+          Only the administrator can see this page.
+        </Alert>
+      ) : (
+        <>
+          <Box
+            sx={{
+              marginTop: 2,
+              marginBottom: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <h2>Registered Users</h2>
         <table
           style={{
             width: isAdmin() ? "45%" : "30%",
@@ -181,6 +190,8 @@ const UsersComponent: React.FC = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
+      </>
+      )}
     </div>
   );
 };
