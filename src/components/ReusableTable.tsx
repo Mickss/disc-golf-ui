@@ -59,7 +59,18 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                         {rows.map((row, rowIndex) => (
                             <TableRow key={row.id || rowIndex} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                                 {columns.map((column, colIndex) => (
-                                    <TableCell key={colIndex} component="th" scope="row" align={column.align || "left"}>
+                                    <TableCell
+                                        key={colIndex}
+                                        component="th"
+                                        scope="row"
+                                        align={column.align || "left"}
+                                        sx={{
+                                            whiteSpace: "normal",
+                                            wordBreak: "break-all",
+                                            overflowWrap: "break-word",
+                                            maxWidth: 250,
+                                        }}
+                                    >
                                         {column.visual ? column.visual(row) : row[column.field as keyof DiscGolfEvent]}
                                     </TableCell>
                                 ))}
