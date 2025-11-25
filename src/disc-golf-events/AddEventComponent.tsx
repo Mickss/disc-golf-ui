@@ -20,11 +20,20 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
         vacancies: ""
     });
 
+    const [touched, setTouched] = useState({
+        tournamentTitle: false
+    });
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEventData({ ...eventData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = () => {
+        if (!eventData.tournamentTitle.trim()) {
+            setTouched({ ...touched, tournamentTitle: true });
+            return;
+        }
+
         fetch(`${config.discGolfServiceUrl}/events`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -85,10 +94,17 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                     margin="dense"
                     label="Tournament Title"
                     type="text"
+                    required
                     fullWidth
                     name="tournamentTitle"
                     value={eventData.tournamentTitle}
                     onChange={handleChange}
+                    onBlur={() => setTouched({ ...touched, tournamentTitle: true })}
+                    error={touched.tournamentTitle && eventData.tournamentTitle.trim() === ""}
+                    helperText={
+                        touched.tournamentTitle && eventData.tournamentTitle.trim() === ""
+                            ? "Field is required" : ""
+                    }
                 />
                 <TextField
                     margin="dense"
