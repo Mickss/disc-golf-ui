@@ -66,7 +66,6 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                                         align={column.align || "left"}
                                         sx={{
                                             whiteSpace: "normal",
-                                            wordBreak: "break-all",
                                             overflowWrap: "break-word",
                                             maxWidth: 250,
                                         }}
