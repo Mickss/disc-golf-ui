@@ -20,16 +20,14 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
         vacancies: ""
     });
 
-    const [touched, setTouched] = useState({
-        tournamentTitle: false
-    });
+    const [touched, setTouched] = useState<{ tournamentTitle?: boolean }>({});
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEventData({ ...eventData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = () => {
-        if (!eventData.tournamentTitle.trim()) {
+        if (!eventData.tournamentTitle) {
             setTouched({ ...touched, tournamentTitle: true });
             return;
         }
@@ -100,9 +98,9 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                     value={eventData.tournamentTitle}
                     onChange={handleChange}
                     onBlur={() => setTouched({ ...touched, tournamentTitle: true })}
-                    error={touched.tournamentTitle && eventData.tournamentTitle.trim() === ""}
+                    error={touched.tournamentTitle && !eventData.tournamentTitle}
                     helperText={
-                        touched.tournamentTitle && eventData.tournamentTitle.trim() === ""
+                        touched.tournamentTitle && !eventData.tournamentTitle
                             ? "Field is required" : ""
                     }
                 />

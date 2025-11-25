@@ -24,6 +24,11 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
     };
 
     const handleSave = () => {
+        if (!editedEvent.tournamentTitle) {
+            setTouched({ ...touched, tournamentTitle: true });
+        return;
+        }
+
         if (editedEvent) {
             onSave(editedEvent);
         }
@@ -55,6 +60,7 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
                     margin="dense"
                     label="Tournament Title"
                     type="text"
+                    required
                     fullWidth
                     name="tournamentTitle"
                     value={editedEvent.tournamentTitle}
