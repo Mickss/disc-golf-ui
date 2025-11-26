@@ -365,7 +365,11 @@ const handleImport = async (file: File) => {
           rows={discGolfEvents}
           currentSort={currentSort}
           onSort={createSortHandler}
-          renderActions={(row: DiscGolfEvent) => (
+          renderActions={(row: DiscGolfEvent) => {
+            const status = String(row.registration || "").toLowerCase();
+            const isOpen = status === "open";
+            
+            return (
             <>
               {isAdmin() && <Button
                 variant="outlined"
@@ -399,18 +403,23 @@ const handleImport = async (file: File) => {
                   Unregister
                 </Button>
               ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  onClick={() => handleRegister(row.id)}
-                  disabled={!isLoggedIn}
-                >
-                  Register
-                </Button>
-              )}
-            </>
-          )}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={() => handleRegister(row.id)}
+                    disabled={!isLoggedIn || !isOpen}
+                    sx={{
+                      opacity: (!isLoggedIn || !isOpen) ? 0.5 : 1,
+                      cursor: (!isLoggedIn || !isOpen) ? "not-allowed" : "pointer"
+                    }}
+                  >
+                    {!isLoggedIn ? "Register" : (isOpen ? "Register" : "Closed")}
+                  </Button>
+                )}
+              </>
+            );
+          }}
         />)
         : (loading === false && <Alert severity="info" sx={{ maxWidth: 600, margin: "20px auto" }}>
           You haven't registered for any events yet.
