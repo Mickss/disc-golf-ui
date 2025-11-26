@@ -10,6 +10,7 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
     onCancel: () => void;
 }) => {
     const [editedEvent, setEditedEvent] = useState<DiscGolfEvent>({...event});
+    const [touched, setTouched] = useState<{ tournamentTitle?: boolean }>({});
 
     useEffect(() => {
         setEditedEvent({...event});
@@ -23,6 +24,11 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
     };
 
     const handleSave = () => {
+        if (!editedEvent.tournamentTitle) {
+            setTouched({ ...touched, tournamentTitle: true });
+        return;
+        }
+
         if (editedEvent) {
             onSave(editedEvent);
         }
@@ -54,10 +60,14 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
                     margin="dense"
                     label="Tournament Title"
                     type="text"
+                    required
                     fullWidth
                     name="tournamentTitle"
                     value={editedEvent.tournamentTitle}
                     onChange={handleChange}
+                    onBlur={() => setTouched({ ...touched, tournamentTitle: true })}
+                    error={touched.tournamentTitle && !editedEvent.tournamentTitle}
+                    helperText={touched.tournamentTitle && !editedEvent.tournamentTitle ? "Field is required" : ""}
                 />
                 <TextField
                     margin="dense"
