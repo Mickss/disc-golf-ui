@@ -1,8 +1,9 @@
 export type DiscGolfEvent = {
     id: string;
-    tournamentTitle: string;
     tournamentDate: string;
+    registrationStart: string;
+    registrationEnd: string;
     pdga: string;
+    tournamentTitle: string;
     region: string;
-    registration: string;
 }

@@ -89,11 +89,11 @@ const MyEvents = () => {
 
   const columns = [
     { header: "Tournament Title", field: "tournamentTitle" },
+    { header: "Tournament Date", field: "tournamentDate" },
+    { header: "Registration Start", field: "registrationStart" },
+    { header: "Registration End", field: "registrationEnd" },
     { header: "PDGA", field: "pdga" },
-    { header: "Date", field: "tournamentDate" },
     { header: "Region", field: "region" },
-    { header: "Registration", field: "registration" },
-    { header: "Vacancies", field: "vacancies" },
   ];
 
   if (!isLoggedIn) {
@@ -114,12 +114,13 @@ const MyEvents = () => {
 
   const renderVisual = (myEvents) => {
     return myEvents.map((event) => {
-      return {...event,
+      return {
+        ...event,
         tournamentDate: formatDate(event.tournamentDate),
-        registration: <span style={{ color: event.registration === "Open" ? "#16a34a" : "#dc2626" }}>
-          {event.registration}
-        </span>};
-    })
+        registrationStart: formatDate(event.registrationStart),
+        registrationEnd: formatDate(event.registrationEnd),
+      };
+    });
   };
 
   return (

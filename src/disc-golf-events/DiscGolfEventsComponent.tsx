@@ -206,15 +206,11 @@ const DiscGolfEventsComponent = () => {
 
   const columns = [
     { header: "Tournament Date", field: "tournamentDate", visual: (event: DiscGolfEvent) => formatDate(event.tournamentDate) },
+    { header: "Registration Start", field: "registrationStart", visual: (event: DiscGolfEvent) => formatDate(event.registrationStart) },
+    { header: "Registration End", field: "registrationEnd", visual: (event: DiscGolfEvent) => formatDate(event.registrationEnd) },
     { header: "PDGA", field: "pdga" },
     { header: "Tournament Title", field: "tournamentTitle" },
     { header: "Region", field: "region" },
-    {
-      header: "Registration", field: "registration", visual: (event: DiscGolfEvent) => <span style={{ color: event.registration === "Open" ? "#16a34a" : "#dc2626" }}>
-        {event.registration}
-      </span>
-    },
-    { header: "Vacancies", field: "vacancies" },
   ];
 
   const handleEdit = (event: DiscGolfEvent) => {
@@ -366,9 +362,6 @@ const handleImport = async (file: File) => {
           currentSort={currentSort}
           onSort={createSortHandler}
           renderActions={(row: DiscGolfEvent) => {
-            const status = String(row.registration || "").toLowerCase();
-            const isOpen = status === "open";
-            
             return (
             <>
               {isAdmin() && <Button
@@ -404,18 +397,18 @@ const handleImport = async (file: File) => {
                 </Button>
               ) : (
                   <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    onClick={() => handleRegister(row.id)}
-                    disabled={!isLoggedIn || !isOpen}
-                    sx={{
-                      opacity: (!isLoggedIn || !isOpen) ? 0.5 : 1,
-                      cursor: (!isLoggedIn || !isOpen) ? "not-allowed" : "pointer"
-                    }}
-                  >
-                    {!isLoggedIn ? "Register" : (isOpen ? "Register" : "Closed")}
-                  </Button>
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  onClick={() => handleRegister(row.id)}
+                  disabled={!isLoggedIn}
+                  sx={{
+                    opacity: !isLoggedIn ? 0.5 : 1,
+                    cursor: !isLoggedIn ? "not-allowed" : "pointer"
+                  }}
+                >
+                  Register
+                </Button>
                 )}
               </>
             );
