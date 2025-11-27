@@ -8,19 +8,21 @@ const EditEventComponent = () => {
     interface Event {
         id: string;
         tournamentDate?: string;
+        registrationStart?: string;
+        registrationEnd?: string;
         pdga?: string;
         tournamentTitle?: string;
         region?: string;
-        registration?: string;
     }
     
     const [eventToEdit, setEventToEdit] = useState<Event>({
         id: "",
         tournamentDate: "",
+        registrationStart: "",
+        registrationEnd: "",
         pdga: "",
         tournamentTitle: "",
         region: "",
-        registration: "",
     });
 
     useEffect(() => {
@@ -55,24 +57,27 @@ const EditEventComponent = () => {
     };
 
     const tournamentDateInputRef = useRef<HTMLInputElement>(null);
+    const registrationStartInputRef = useRef<HTMLInputElement>(null);
+    const registrationEndInputRef = useRef<HTMLInputElement>(null);
     const pdgaInputRef = useRef<HTMLInputElement>(null);
     const tournamentTitleInputRef = useRef<HTMLInputElement>(null);
     const regionInputRef = useRef<HTMLInputElement>(null);
-    const registrationInputRef = useRef<HTMLInputElement>(null);
 
     eventToEdit.tournamentDate && tournamentDateInputRef.current && (tournamentDateInputRef.current.value = eventToEdit.tournamentDate);
+    eventToEdit.registrationStart && registrationStartInputRef.current && (registrationStartInputRef.current.value = eventToEdit.registrationStart);
+    eventToEdit.registrationEnd && registrationEndInputRef.current && (registrationEndInputRef.current.value = eventToEdit.registrationEnd);
     eventToEdit.pdga && pdgaInputRef.current && (pdgaInputRef.current.value = eventToEdit.pdga);
     eventToEdit.tournamentTitle && tournamentTitleInputRef.current && (tournamentTitleInputRef.current.value = eventToEdit.tournamentTitle);
     eventToEdit.region && regionInputRef.current && (regionInputRef.current.value = eventToEdit.region);
-    eventToEdit.registration && registrationInputRef.current && (registrationInputRef.current.value = eventToEdit.registration);
 
     const updateEvent = () => {
         const eventData = {
             tournamentDate: tournamentDateInputRef.current ? tournamentDateInputRef.current.value : "",
+            registrationStart: registrationStartInputRef.current ? registrationStartInputRef.current.value : "",
+            registrationEnd: registrationEndInputRef.current ? registrationEndInputRef.current.value : "",
             pdga: pdgaInputRef.current ? pdgaInputRef.current.value : "",
             tournamentTitle: tournamentTitleInputRef.current ? tournamentTitleInputRef.current.value : "",
             region: regionInputRef.current ? regionInputRef.current.value : "",
-            registration: registrationInputRef.current ? registrationInputRef.current.value : "",
         };
 
         fetch(`${config.discGolfServiceUrl}/events/${eventIdToEdit}`, {
@@ -86,7 +91,6 @@ const EditEventComponent = () => {
     };
 
     return <>
-
         <h1>Edit event</h1>
         <select
             value={eventIdToEdit}
@@ -96,7 +100,15 @@ const EditEventComponent = () => {
         </select>
         <div>
             <label htmlFor="tournamentDate">Tournament Date </label>
-            <input type="text" id="tournamentDate" ref={tournamentDateInputRef} />
+            <input type="date" id="tournamentDate" ref={tournamentDateInputRef} />
+        </div>
+        <div>
+            <label htmlFor="registrationStart">Registration Start </label>
+            <input type="date" id="registrationStart" ref={registrationStartInputRef} />
+        </div>
+        <div>
+            <label htmlFor="registrationEnd">Registration End </label>
+            <input type="date" id="registrationEnd" ref={registrationEndInputRef} />
         </div>
         <div>
             <label htmlFor="pdga">PDGA </label>
@@ -109,10 +121,6 @@ const EditEventComponent = () => {
         <div>
             <label htmlFor="region">Region </label>
             <input type="text" id="region" ref={regionInputRef} />
-        </div>
-        <div>
-            <label htmlFor="registration">Registration </label>
-            <input type="text" id="registration" ref={registrationInputRef} />
         </div>
         <button onClick={updateEvent}>Update Event</button>
     </>

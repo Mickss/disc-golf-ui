@@ -1,7 +1,6 @@
 import { useState } from "react";
 import config from '../config';
 import { Button, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
 import React from "react";
 
 type AddEventProps = {
@@ -13,11 +12,11 @@ type AddEventProps = {
 const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, setSnackbar }) => {
     const [eventData, setEventData] = useState({
         tournamentDate: "",
+        registrationStart: "",
+        registrationEnd: "",
         pdga: "",
         tournamentTitle: "",
-        region: "",
-        registration: "OPEN",
-        vacancies: ""
+        region: ""
     });
 
     const [touched, setTouched] = useState<{ tournamentTitle?: boolean }>({});
@@ -75,18 +74,30 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    inputProps={{
-                        placeholder: ""
+                />
+                <TextField
+                    margin="dense"
+                    label="Registration Start"
+                    type="date"
+                    fullWidth
+                    name="registrationStart"
+                    value={eventData.registrationStart}
+                    onChange={handleChange}
+                    InputLabelProps={{
+                        shrink: true,
                     }}
                 />
                 <TextField
                     margin="dense"
-                    label="PDGA"
-                    type="text"
+                    label="Registration End"
+                    type="date"
                     fullWidth
-                    name="pdga"
-                    value={eventData.pdga}
+                    name="registrationEnd"
+                    value={eventData.registrationEnd}
                     onChange={handleChange}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
                 />
                 <TextField
                     margin="dense"
@@ -106,32 +117,20 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                 />
                 <TextField
                     margin="dense"
+                    label="PDGA"
+                    type="text"
+                    fullWidth
+                    name="pdga"
+                    value={eventData.pdga}
+                    onChange={handleChange}
+                />
+                <TextField
+                    margin="dense"
                     label="Region"
                     type="text"
                     fullWidth
                     name="region"
                     value={eventData.region}
-                    onChange={handleChange}
-                />
-                <TextField
-                    margin="dense"
-                    label="Registration"
-                    select
-                    fullWidth
-                    name="registration"
-                    value={eventData.registration}
-                    onChange={handleChange}
-                >
-                    <MenuItem value="OPEN">OPEN</MenuItem>
-                    <MenuItem value="CLOSED">CLOSED</MenuItem>
-                </TextField>
-                <TextField
-                    margin="dense"
-                    label="Vacancies"
-                    type="text"
-                    fullWidth
-                    name="vacancies"
-                    value={eventData.vacancies}
                     onChange={handleChange}
                 />
             </DialogContent>

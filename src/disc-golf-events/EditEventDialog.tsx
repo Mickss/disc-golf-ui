@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
 import {DiscGolfEvent} from "./DiscGolfEvent";
 
 const EditEventDialog = ({ open, event, onSave, onCancel }: {
@@ -26,7 +25,7 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
     const handleSave = () => {
         if (!editedEvent.tournamentTitle) {
             setTouched({ ...touched, tournamentTitle: true });
-        return;
+            return;
         }
 
         if (editedEvent) {
@@ -46,6 +45,27 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
                     name="tournamentDate"
                     value={editedEvent.tournamentDate}
                     onChange={handleChange}
+                    InputLabelProps={{ shrink: true }}
+                />
+                <TextField
+                    margin="dense"
+                    label="Registration Start"
+                    type="date"
+                    fullWidth
+                    name="registrationStart"
+                    value={editedEvent.registrationStart}
+                    onChange={handleChange}
+                    InputLabelProps={{ shrink: true }}
+                />
+                <TextField
+                    margin="dense"
+                    label="Registration End"
+                    type="date"
+                    fullWidth
+                    name="registrationEnd"
+                    value={editedEvent.registrationEnd}
+                    onChange={handleChange}
+                    InputLabelProps={{ shrink: true }}
                 />
                 <TextField
                     margin="dense"
@@ -78,18 +98,6 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
                     value={editedEvent.region}
                     onChange={handleChange}
                 />
-                <TextField
-                    margin="dense"
-                    label="Registration"
-                    select
-                    fullWidth
-                    name="registration"
-                    value={editedEvent.registration}
-                    onChange={handleChange}
-                >
-                    <MenuItem value="OPEN">OPEN</MenuItem>
-                    <MenuItem value="CLOSED">CLOSED</MenuItem>
-                </TextField>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCancel}>Cancel</Button>
