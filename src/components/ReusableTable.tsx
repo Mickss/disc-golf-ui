@@ -12,13 +12,14 @@ import { Sort } from "../disc-golf-events/Sort";
 import { DiscGolfEvent } from "../disc-golf-events/DiscGolfEvent";
 import { TableColumn } from "../disc-golf-events/TableColumn";
 
-const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderActions }: { 
+const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderActions, getRowStyle }: { 
     title?: string, 
     columns: TableColumn[], 
     rows: DiscGolfEvent[], 
     currentSort?: Sort, 
     onSort?: (currentSort: Sort) => void, 
-    renderActions?: (row: DiscGolfEvent) => any }
+    renderActions?: (row: DiscGolfEvent) => any,
+    getRowStyle?: (row: DiscGolfEvent) => any }
 ) => {
     const sortHandler = (field: string) => async () => {
         const isAscending = currentSort && currentSort.field === field && currentSort.direction === "asc";
@@ -57,7 +58,11 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                     </TableHead>
                     <TableBody>
                         {rows.map((row, rowIndex) => (
-                            <TableRow key={row.id || rowIndex} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                            <TableRow key={row.id || rowIndex} sx={{ "&:last-child td, &:last-child th": { border: 0 },
+                            transition: 'background-color 0.2s ease',
+                                    ...(getRowStyle ? getRowStyle(row) : {})
+                            }}
+                            >
                                 {columns.map((column, colIndex) => (
                                     <TableCell
                                         key={colIndex}
