@@ -13,6 +13,12 @@ import { SnackbarState } from "./SnackbarState";
 import { Sort } from "./Sort";
 import ConfirmationModal from "./ConfirmationModal";
 
+export enum RegistrationStatus {
+  OPEN = "OPEN",
+  CLOSED = "CLOSED",
+  PASSED = "PASSED",
+}
+
 const DiscGolfEventsComponent = () => {
   const [discGolfEvents, setDiscGolfEvents] = useState([]);
   const [currentSort, setCurrentSort] = useState<Sort | undefined>();
@@ -36,7 +42,9 @@ const DiscGolfEventsComponent = () => {
   const { loading, setLoading } = useLoading();
 
   const createSortHandler = (newSort: Sort) => {
-    setCurrentSort({ field: newSort.field, direction: newSort.direction });
+    if (newSort.field !== 'registration') {
+      setCurrentSort({ field: newSort.field, direction: newSort.direction });
+    }
   }
 
   const deleteEvent = (eventId: string, eventTitle: string) => {
@@ -192,7 +200,7 @@ const DiscGolfEventsComponent = () => {
     return date.toLocaleDateString();
   };
 
-  const getRegistrationStatus = (event: DiscGolfEvent) => {
+  const getRegistrationStatus = (event: DiscGolfEvent): RegistrationStatus => {
     const now = new Date();
     const registrationStart = event.registrationStart ? new Date(event.registrationStart) : null;
     const registrationEnd = event.registrationEnd ? new Date(event.registrationEnd) : null;
@@ -203,7 +211,7 @@ const DiscGolfEventsComponent = () => {
         threeWeeksAfter.setDate(threeWeeksAfter.getDate() + 21);
     
         if (now <= threeWeeksAfter) {
-          return 'PASSED'; 
+          return RegistrationStatus.PASSED;
         }
       }
 
@@ -212,23 +220,23 @@ const DiscGolfEventsComponent = () => {
           threeWeeksAfter.setDate(threeWeeksAfter.getDate() + 21);
     
           if (now > threeWeeksAfter) {
-            return 'CLOSED';
+            return RegistrationStatus.CLOSED;
           }
         }
 
         if (registrationEnd && now > registrationEnd) {
-          return 'CLOSED';
+          return RegistrationStatus.CLOSED;
         }
 
         if (!registrationStart) {
-          return 'CLOSED';
+          return RegistrationStatus.CLOSED;
         }
 
         if (now < registrationStart) {
-          return 'CLOSED';
+          return RegistrationStatus.CLOSED;
         }
 
-      return 'OPEN';
+    return RegistrationStatus.OPEN;
   };
 
   const handleCloseSnackbar = () => {
@@ -246,12 +254,11 @@ const DiscGolfEventsComponent = () => {
   const columns = [
   { header: "Tournament Date", field: "tournamentDate", visual: (event: DiscGolfEvent) => formatDate(event.tournamentDate) },
   { header: "Registration Start", field: "registrationStart", visual: (event: DiscGolfEvent) => formatDate(event.registrationStart) },
-  { header: "Registration End", field: "registrationEnd", visual: (event: DiscGolfEvent) => formatDate(event.registrationEnd) },
-  { 
-    header: "Status", 
-    field: "status", 
+  {
+    header: "Registration",
+    field: "registration",
     visual: (event: DiscGolfEvent) => {
-      const status = getRegistrationStatus(event);
+      const status: RegistrationStatus = getRegistrationStatus(event);
       
       const statusStyles = {
         OPEN: { bg: '#d1fae5', color: '#065f46' },
@@ -431,7 +438,7 @@ const handleImport = async (file: File) => {
           getRowStyle={(row: DiscGolfEvent) => {
             const status = getRegistrationStatus(row);
             
-            if (status === 'OPEN') {
+            if (status === RegistrationStatus.OPEN) {
               return {
                 backgroundColor: 'inherit',
                 opacity: 1,
