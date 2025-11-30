@@ -6,4 +6,5 @@ export type DiscGolfEvent = {
     pdga: string;
     tournamentTitle: string;
     region: string;
+    externalLink: string;
 }
