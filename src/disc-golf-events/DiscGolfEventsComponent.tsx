@@ -13,6 +13,12 @@ import { SnackbarState } from "./SnackbarState";
 import { Sort } from "./Sort";
 import ConfirmationModal from "./ConfirmationModal";
 
+export enum RegistrationStatus {
+  OPEN = "OPEN",
+  CLOSED = "CLOSED",
+  PASSED = "PASSED",
+}
+
 const DiscGolfEventsComponent = () => {
   const [discGolfEvents, setDiscGolfEvents] = useState([]);
   const [currentSort, setCurrentSort] = useState<Sort | undefined>();
@@ -36,7 +42,9 @@ const DiscGolfEventsComponent = () => {
   const { loading, setLoading } = useLoading();
 
   const createSortHandler = (newSort: Sort) => {
-    setCurrentSort({ field: newSort.field, direction: newSort.direction });
+    if (newSort.field !== 'registration') {
+      setCurrentSort({ field: newSort.field, direction: newSort.direction });
+    }
   }
 
   const deleteEvent = (eventId: string, eventTitle: string) => {
@@ -192,6 +200,45 @@ const DiscGolfEventsComponent = () => {
     return date.toLocaleDateString();
   };
 
+  const getRegistrationStatus = (event: DiscGolfEvent): RegistrationStatus => {
+    const now = new Date();
+    const registrationStart = event.registrationStart ? new Date(event.registrationStart) : null;
+    const registrationEnd = event.registrationEnd ? new Date(event.registrationEnd) : null;
+    const tournamentDate = event.tournamentDate ? new Date(event.tournamentDate) : null;
+
+      if (tournamentDate && now > tournamentDate) {
+        const threeWeeksAfter = new Date(tournamentDate);
+        threeWeeksAfter.setDate(threeWeeksAfter.getDate() + 21);
+    
+        if (now <= threeWeeksAfter) {
+          return RegistrationStatus.PASSED;
+        }
+      }
+
+        if (tournamentDate) {
+          const threeWeeksAfter = new Date(tournamentDate);
+          threeWeeksAfter.setDate(threeWeeksAfter.getDate() + 21);
+    
+          if (now > threeWeeksAfter) {
+            return RegistrationStatus.CLOSED;
+          }
+        }
+
+        if (registrationEnd && now > registrationEnd) {
+          return RegistrationStatus.CLOSED;
+        }
+
+        if (!registrationStart) {
+          return RegistrationStatus.CLOSED;
+        }
+
+        if (now < registrationStart) {
+          return RegistrationStatus.CLOSED;
+        }
+
+    return RegistrationStatus.OPEN;
+  };
+
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
   };
@@ -205,13 +252,40 @@ const DiscGolfEventsComponent = () => {
   }
 
   const columns = [
-    { header: "Tournament Date", field: "tournamentDate", visual: (event: DiscGolfEvent) => formatDate(event.tournamentDate) },
-    { header: "Registration Start", field: "registrationStart", visual: (event: DiscGolfEvent) => formatDate(event.registrationStart) },
-    { header: "Registration End", field: "registrationEnd", visual: (event: DiscGolfEvent) => formatDate(event.registrationEnd) },
-    { header: "PDGA", field: "pdga" },
-    { header: "Tournament Title", field: "tournamentTitle" },
-    { header: "Region", field: "region" },
-  ];
+  { header: "Tournament Date", field: "tournamentDate", visual: (event: DiscGolfEvent) => formatDate(event.tournamentDate) },
+  { header: "Registration Start", field: "registrationStart", visual: (event: DiscGolfEvent) => formatDate(event.registrationStart) },
+  {
+    header: "Registration",
+    field: "registration",
+    visual: (event: DiscGolfEvent) => {
+      const status: RegistrationStatus = getRegistrationStatus(event);
+      
+      const statusStyles = {
+        OPEN: { bg: '#d1fae5', color: '#065f46' },
+        CLOSED: { bg: '#f3f4f6', color: '#6b7280' },
+        PASSED: { bg: '#e5e7eb', color: '#4b5563' }
+      };
+      
+      const style = statusStyles[status] || statusStyles.CLOSED;
+      
+      return (
+        <span style={{
+          padding: '4px 8px',
+          fontSize: '12px',
+          fontWeight: 600,
+          borderRadius: '4px',
+          backgroundColor: style.bg,
+          color: style.color
+        }}>
+          {status}
+        </span>
+      );
+    }
+  },
+  { header: "PDGA", field: "pdga" },
+  { header: "Tournament Title", field: "tournamentTitle" },
+  { header: "Region", field: "region" },
+];
 
   const handleEdit = (event: DiscGolfEvent) => {
     setEditingEvent(event);
@@ -361,6 +435,28 @@ const handleImport = async (file: File) => {
           rows={discGolfEvents}
           currentSort={currentSort}
           onSort={createSortHandler}
+          getRowStyle={(row: DiscGolfEvent) => {
+            const status = getRegistrationStatus(row);
+            
+            if (status === RegistrationStatus.OPEN) {
+              return {
+                backgroundColor: 'inherit',
+                opacity: 1,
+                '&:hover': {
+                  backgroundColor: '#f9fafb'
+                }
+              };
+            }
+            
+            return {
+              backgroundColor: '#f3f4f6',
+              opacity: 0.6,
+              '&:hover': {
+                backgroundColor: '#e5e7eb'
+              }
+            };
+          }}
+
           renderActions={(row: DiscGolfEvent) => {
             return (
             <>
