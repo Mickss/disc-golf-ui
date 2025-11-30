@@ -122,78 +122,6 @@ const DiscGolfEventsComponent = () => {
     fetchEvents();
   }, [currentSort, fetchEvents]);
 
-  const handleRegister = async (eventId: string) => {
-    if (!isLoggedIn) {
-      setSnackbar({
-        open: true,
-        message: "Please log in to register for events",
-        severity: "warning"
-      });
-      return;
-    }
-
-    try {
-      const response = await fetch(`${config.discGolfServiceUrl}/events/${eventId}/register`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({}),
-        credentials: 'include'
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to register for event');
-      }
-
-      setSnackbar({
-        open: true,
-        message: "Successfully registered for event",
-        severity: "success"
-      });
-
-      fetchEvents();
-    } catch (error) {
-      console.error("Error registering:", error);
-      setSnackbar({
-        open: true,
-        message: "Failed to register for event",
-        severity: "error"
-      });
-    }
-  };
-
-  const handleUnregister = async (eventId: string) => {
-    try {
-      const response = await fetch(`${config.discGolfServiceUrl}/events/${eventId}/unregister`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to unregister from event');
-      }
-
-      setSnackbar({
-        open: true,
-        message: "Successfully unregistered from event",
-        severity: "success"
-      });
-
-      fetchEvents();
-    } catch (error) {
-      console.error('Error unregistering:', error);
-      setSnackbar({
-        open: true,
-        message: "Failed to unregister from event",
-        severity: "error"
-      });
-    }
-  };
-
   const formatDate = (dateString: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -285,6 +213,23 @@ const DiscGolfEventsComponent = () => {
   { header: "PDGA", field: "pdga" },
   { header: "Tournament Title", field: "tournamentTitle" },
   { header: "Region", field: "region" },
+  { header: "Link", field: "externalLink", visual: (event: DiscGolfEvent) => {
+      function goToPage(externalLink?: string) {
+        if (externalLink) {
+          window.open(externalLink, '_blank');
+        }
+      }
+
+      return <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={() => goToPage(event.externalLink)}
+          sx={{ mr: 1 }}>
+        Link
+      </Button>
+    }
+  },
 ];
 
   const handleEdit = (event: DiscGolfEvent) => {
@@ -480,32 +425,6 @@ const handleImport = async (file: File) => {
                   Delete
                 </Button>
               )}
-              {/*TODO isRegistered is nowhere defined*/}
-              {/* {row.isRegistered ? ( */}
-              {false ? (
-                <Button
-                  variant="outlined"
-                  color="error"
-                  size="small"
-                  onClick={() => handleUnregister(row.id)}
-                >
-                  Unregister
-                </Button>
-              ) : (
-                  <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  onClick={() => handleRegister(row.id)}
-                  disabled={!isLoggedIn}
-                  sx={{
-                    opacity: !isLoggedIn ? 0.5 : 1,
-                    cursor: !isLoggedIn ? "not-allowed" : "pointer"
-                  }}
-                >
-                  Register
-                </Button>
-                )}
               </>
             );
           }}
