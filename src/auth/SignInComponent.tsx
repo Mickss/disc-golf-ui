@@ -15,8 +15,8 @@ function SignInComponent() {
     setError(null);
     const data = new FormData(event.currentTarget);
     const loginData = {
-      email: data.get("email"),
-      password: data.get("password"),
+      email: data.get("email") as string,
+      password: data.get("password") as string,
     };
 
     if (!loginData.email || !loginData.password) {
@@ -32,7 +32,7 @@ function SignInComponent() {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Bad credentials");
+          throw response.status; 
         }
         return response.text();
       })
@@ -41,8 +41,14 @@ function SignInComponent() {
         login();
         navigate("/");
       })
-      .catch(() => {
-        setError("Incorrect email or password.");
+      .catch((errorStatus) => {
+        
+        if (errorStatus === 401) {
+          setError("Incorrect email or password.");
+        } else {
+          setError("An unexpected error occurred. Please try again later.");
+          console.error("Login failed:", errorStatus);
+        }
       });
   };
 
