@@ -16,7 +16,8 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
         registrationEnd: "",
         pdga: "",
         tournamentTitle: "",
-        region: ""
+        region: "",
+        externalLink: ""
     });
 
     const [touched, setTouched] = useState<{ tournamentTitle?: boolean }>({});
@@ -131,6 +132,15 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                     fullWidth
                     name="region"
                     value={eventData.region}
+                    onChange={handleChange}
+                />
+                <TextField
+                    margin="dense"
+                    label="External Link"
+                    type="text"
+                    fullWidth
+                    name="externalLink"
+                    value={eventData.externalLink}
                     onChange={handleChange}
                 />
             </DialogContent>

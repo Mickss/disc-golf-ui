@@ -13,6 +13,7 @@ const EditEventComponent = () => {
         pdga?: string;
         tournamentTitle?: string;
         region?: string;
+        externalLink?: string;
     }
     
     const [eventToEdit, setEventToEdit] = useState<Event>({
@@ -23,6 +24,7 @@ const EditEventComponent = () => {
         pdga: "",
         tournamentTitle: "",
         region: "",
+        externalLink: "",
     });
 
     useEffect(() => {
@@ -62,6 +64,7 @@ const EditEventComponent = () => {
     const pdgaInputRef = useRef<HTMLInputElement>(null);
     const tournamentTitleInputRef = useRef<HTMLInputElement>(null);
     const regionInputRef = useRef<HTMLInputElement>(null);
+    const externalLinkInputRef = useRef<HTMLInputElement>(null);
 
     eventToEdit.tournamentDate && tournamentDateInputRef.current && (tournamentDateInputRef.current.value = eventToEdit.tournamentDate);
     eventToEdit.registrationStart && registrationStartInputRef.current && (registrationStartInputRef.current.value = eventToEdit.registrationStart);
@@ -69,6 +72,7 @@ const EditEventComponent = () => {
     eventToEdit.pdga && pdgaInputRef.current && (pdgaInputRef.current.value = eventToEdit.pdga);
     eventToEdit.tournamentTitle && tournamentTitleInputRef.current && (tournamentTitleInputRef.current.value = eventToEdit.tournamentTitle);
     eventToEdit.region && regionInputRef.current && (regionInputRef.current.value = eventToEdit.region);
+    eventToEdit.externalLink && externalLinkInputRef.current && (externalLinkInputRef.current.value = eventToEdit.externalLink);
 
     const updateEvent = () => {
         const eventData = {
@@ -78,6 +82,7 @@ const EditEventComponent = () => {
             pdga: pdgaInputRef.current ? pdgaInputRef.current.value : "",
             tournamentTitle: tournamentTitleInputRef.current ? tournamentTitleInputRef.current.value : "",
             region: regionInputRef.current ? regionInputRef.current.value : "",
+            externalLink: externalLinkInputRef.current ? externalLinkInputRef.current.value : "",
         };
 
         fetch(`${config.discGolfServiceUrl}/events/${eventIdToEdit}`, {
@@ -121,6 +126,10 @@ const EditEventComponent = () => {
         <div>
             <label htmlFor="region">Region </label>
             <input type="text" id="region" ref={regionInputRef} />
+        </div>
+        <div>
+            <label htmlFor="externalLink">External Link </label>
+            <input type="url" id="externalLink" ref={externalLinkInputRef} />
         </div>
         <button onClick={updateEvent}>Update Event</button>
     </>
