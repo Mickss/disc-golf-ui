@@ -98,6 +98,15 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
                     value={editedEvent.region}
                     onChange={handleChange}
                 />
+                <TextField
+                    margin="dense"
+                    label="External Link"
+                    type="text"
+                    fullWidth
+                    name="externalLink"
+                    value={editedEvent.externalLink || ""}
+                    onChange={handleChange}
+                />
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCancel}>Cancel</Button>
