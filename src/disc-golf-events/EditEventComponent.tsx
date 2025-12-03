@@ -129,7 +129,7 @@ const EditEventComponent = () => {
         </div>
         <div>
             <label htmlFor="externalLink">External Link </label>
-            <input type="url" id="externalLink" ref={externalLinkInputRef} />
+            <input type="text" id="externalLink" ref={externalLinkInputRef} />
         </div>
         <button onClick={updateEvent}>Update Event</button>
     </>
