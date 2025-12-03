@@ -101,7 +101,7 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
                 <TextField
                     margin="dense"
                     label="External Link"
-                    type="url"
+                    type="text"
                     fullWidth
                     name="externalLink"
                     value={editedEvent.externalLink || ""}
