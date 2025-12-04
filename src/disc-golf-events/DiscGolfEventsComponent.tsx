@@ -220,16 +220,29 @@ const DiscGolfEventsComponent = () => {
         }
       }
 
-      return <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={() => goToPage(event.externalLink)}
-          sx={{ mr: 1 }}>
-        Link
-      </Button>
-    }
-  },
+      const links = event.externalLink 
+      ? event.externalLink.split(';').filter(link => link !== '')
+      : [];
+
+      if (links.length === 0) return null;
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          {links.map((link, index) => (
+            <Button
+              key={index}
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={() => goToPage(link)}
+            >
+              {links.length > 1 ? `Link ${index + 1}` : 'Link'}
+            </Button>
+          ))}
+        </div>
+      );
+    },
+  }
 ];
 
   const handleEdit = (event: DiscGolfEvent) => {

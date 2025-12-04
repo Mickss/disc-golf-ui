@@ -106,6 +106,9 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
                     name="externalLink"
                     value={editedEvent.externalLink || ""}
                     onChange={handleChange}
+                    helperText="Multiple links: separate with semicolon (;)"
+                    multiline
+                    rows={2}
                 />
             </DialogContent>
             <DialogActions>

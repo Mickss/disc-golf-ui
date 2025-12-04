@@ -142,6 +142,9 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                     name="externalLink"
                     value={eventData.externalLink}
                     onChange={handleChange}
+                    helperText="Multiple links: separate with semicolon (;)"
+                    multiline
+                    rows={2}
                 />
             </DialogContent>
             <DialogActions>
