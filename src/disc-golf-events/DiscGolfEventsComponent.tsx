@@ -340,13 +340,13 @@ const handleImport = async (file: File) => {
   };
 
   const openEvents = discGolfEvents.filter(event => 
-  getRegistrationStatus(event) === RegistrationStatus.OPEN
-);
-const otherEvents = discGolfEvents.filter(event => 
-  getRegistrationStatus(event) !== RegistrationStatus.OPEN
-);
+    getRegistrationStatus(event) === RegistrationStatus.OPEN
+  );
+  const otherEvents = discGolfEvents.filter(event => 
+    getRegistrationStatus(event) !== RegistrationStatus.OPEN
+  );
 
-const sortedDiscGolfEvents = [...openEvents, ...otherEvents];
+  const sortedDiscGolfEvents = [...openEvents, ...otherEvents];
 
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
