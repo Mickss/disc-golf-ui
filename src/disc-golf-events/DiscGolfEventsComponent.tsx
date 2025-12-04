@@ -339,6 +339,15 @@ const handleImport = async (file: File) => {
       });
   };
 
+  const openEvents = discGolfEvents.filter(event => 
+  getRegistrationStatus(event) === RegistrationStatus.OPEN
+);
+const otherEvents = discGolfEvents.filter(event => 
+  getRegistrationStatus(event) !== RegistrationStatus.OPEN
+);
+
+const sortedDiscGolfEvents = [...openEvents, ...otherEvents];
+
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
     {isAdmin() && (
@@ -377,7 +386,7 @@ const handleImport = async (file: File) => {
         ? (<ReusableTable
           title="Disc Golf Events"
           columns={columns}
-          rows={discGolfEvents}
+          rows={sortedDiscGolfEvents}
           currentSort={currentSort}
           onSort={createSortHandler}
           getRowStyle={(row: DiscGolfEvent) => {
