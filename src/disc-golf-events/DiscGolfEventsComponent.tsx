@@ -21,7 +21,10 @@ export enum RegistrationStatus {
 
 const DiscGolfEventsComponent = () => {
   const [discGolfEvents, setDiscGolfEvents] = useState([]);
-  const [currentSort, setCurrentSort] = useState<Sort | undefined>();
+  const [currentSort, setCurrentSort] = useState<Sort>({ 
+    field: "tournamentDate", 
+    direction: "asc" 
+  });
   const [error, setError] = useState(null);
   const [snackbar, setSnackbar] = useState<SnackbarState>({ open: false, message: "", severity: "success" });
 
@@ -95,11 +98,9 @@ const DiscGolfEventsComponent = () => {
 
   const fetchEvents = useCallback(() => {
     let url = `${config.discGolfServiceUrl}/public/events`;
-    if (currentSort) {
       url += `?valueToOrderBy=${currentSort.field}`;
       const direction = currentSort.direction.toUpperCase();
       url += `&orderDirection=${direction}`;
-    }
 
     setLoading(true);
     fetch(url)
