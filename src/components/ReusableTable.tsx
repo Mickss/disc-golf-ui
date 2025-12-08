@@ -18,7 +18,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
     rows: DiscGolfEvent[], 
     currentSort?: Sort, 
     onSort?: (currentSort: Sort) => void, 
-    renderActions?: (row: DiscGolfEvent) => any,
+    renderActions?: (row: DiscGolfEvent) => React.ReactElement[],
     getRowStyle?: (row: DiscGolfEvent) => any }
 ) => {
     const sortHandler = (field: string) => async () => {
@@ -29,6 +29,11 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
             await onSort({field: field, direction: newDirection});
         }
     };
+
+    const hasActions = renderActions && rows.some(row => {
+        const actions = renderActions(row);
+        return actions && actions.length > 0;
+    });
 
     return (
         <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
@@ -53,7 +58,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                                     : column.header}
                                 </TableCell>
                             ))}
-                            <TableCell>Actions</TableCell>
+                            {hasActions && <TableCell>Actions</TableCell>}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -78,7 +83,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                                         {column.visual ? column.visual(row) : row[column.field as keyof DiscGolfEvent]}
                                     </TableCell>
                                 ))}
-                                {renderActions && (
+                               {hasActions && (
                                     <TableCell align="right">
                                         {renderActions(row)}
                                     </TableCell>

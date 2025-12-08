@@ -426,19 +426,23 @@ const handleImport = async (file: File) => {
           }}
 
           renderActions={(row: DiscGolfEvent) => {
-            return (
-            <>
-              {isAdmin() && <Button
-                variant="outlined"
-                color="primary"
-                size="small"
-                onClick={() => handleEdit(row)}
-                sx={{ mr: 1 }}
-              >
-                Edit
-              </Button>}
-              {isAdmin() && (
+            const actions: React.ReactElement[] = [];
+            if (isAdmin()) {
+              actions.push(
                 <Button
+                  key="edit"
+                  variant="outlined"
+                  color="primary"
+                  size="small"
+                  onClick={() => handleEdit(row)}
+                  sx={{ mr: 1 }}
+                >
+                  Edit
+                </Button>
+              );
+              actions.push(
+                <Button
+                  key="delete"
                   variant="outlined"
                   color="error"
                   size="small"
@@ -447,9 +451,9 @@ const handleImport = async (file: File) => {
                 >
                   Delete
                 </Button>
-              )}
-              </>
-            );
+              );
+            }
+            return actions;
           }}
         />)
         : (loading === false && <Alert severity="info" sx={{ maxWidth: 600, margin: "20px auto" }}>
