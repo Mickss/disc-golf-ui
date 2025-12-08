@@ -28,26 +28,16 @@ const Header: React.FC = () => {
       <Toolbar>
         <Box sx={{ flexGrow: 1, display: "flex", gap: 2 }}>
           <Button color="inherit" component={Link} to="/">Home</Button>
-          <Button color="inherit" component={Link} to="/my-events">My Events</Button>
           {isAdmin() && (
             <Button color="inherit" component={Link} to="/users">Users</Button>
           )}
           <Button color="inherit" component={Link} to="/contact">Contact</Button>
         </Box>
         <Box sx={{ display: "flex", gap: 2 }}>
-          {isLoggedIn ? (
+          {isLoggedIn && (
             <Button color="inherit" onClick={handleLogout}>
               Log out
             </Button>
-          ) : (
-            <>
-              <Button color="inherit" component={Link} to="/sign-in">
-                Sign in
-              </Button>
-              <Button color="inherit" component={Link} to="/sign-up">
-                Sign up
-              </Button>
-            </>
           )}
         </Box>
       </Toolbar>
