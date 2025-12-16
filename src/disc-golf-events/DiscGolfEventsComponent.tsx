@@ -354,26 +354,16 @@ const handleImport = async (file: File) => {
       });
   };
 
-  const eventsWithOpenFirst = useMemo(() => {
-  const eventsCopy = [...discGolfEvents];
-  eventsCopy.sort((a, b) => {
-    const statusA = getRegistrationStatus(a) === RegistrationStatus.OPEN ? 1 : 0;
-    const statusB = getRegistrationStatus(b) === RegistrationStatus.OPEN ? 1 : 0;
-    return statusB - statusA;
-  });
-  return eventsCopy;
-}, [discGolfEvents, getRegistrationStatus]);
+const openEvents: DiscGolfEvent[] = discGolfEvents.filter(event =>
+  getRegistrationStatus(event) === RegistrationStatus.OPEN
+);
+const otherEvents: DiscGolfEvent[] = discGolfEvents.filter(event =>
+  getRegistrationStatus(event) !== RegistrationStatus.OPEN
+);
 
-  const displayedEvents = useMemo(() => {
-    if (!showOnlyPDGA) {
-      return eventsWithOpenFirst;
-    }
-    
-    return eventsWithOpenFirst.filter(event => {
-      const pdga = event.pdga?.trim() || '';
-      return pdga !== '';
-    });
-  }, [eventsWithOpenFirst, showOnlyPDGA]);
+const sortedDiscGolfEvents: DiscGolfEvent[] = [...openEvents, ...otherEvents];
+const displayedEvents: DiscGolfEvent[] = showOnlyPDGA 
+  ? sortedDiscGolfEvents.filter(e => e.pdga !== '') : sortedDiscGolfEvents;
   
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
@@ -428,7 +418,7 @@ const handleImport = async (file: File) => {
           color="primary"
         />
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {displayedEvents.length} / {eventsWithOpenFirst.length} events
+          {displayedEvents.length} / {sortedDiscGolfEvents.length} events
         </Typography>
       </Box>
     </Box>
