@@ -130,7 +130,7 @@ const DiscGolfEventsComponent = () => {
     return date.toLocaleDateString();
   };
 
-  const getRegistrationStatus = useCallback((event: DiscGolfEvent): RegistrationStatus => {
+  const getRegistrationStatus = (event: DiscGolfEvent): RegistrationStatus => {
     const now = new Date();
     const registrationStart = event.registrationStart ? new Date(event.registrationStart) : null;
     const registrationEnd = event.registrationEnd ? new Date(event.registrationEnd) : null;
@@ -167,7 +167,7 @@ const DiscGolfEventsComponent = () => {
         }
 
     return RegistrationStatus.OPEN;
-  }, []);
+  }
 
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
