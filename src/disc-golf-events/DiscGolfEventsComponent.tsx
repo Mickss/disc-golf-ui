@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useContext, useCallback, useMemo } from "react";
 import { AuthContext } from "../auth/AuthContext";
-import { Button, Dialog, DialogContent } from "@mui/material";
+import { Button, Dialog, DialogContent, Box, Switch, Typography } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import config from "../config";
@@ -20,7 +20,8 @@ export enum RegistrationStatus {
 }
 
 const DiscGolfEventsComponent = () => {
-  const [discGolfEvents, setDiscGolfEvents] = useState([]);
+  const [discGolfEvents, setDiscGolfEvents] = useState<DiscGolfEvent[]>([]);
+  const [showOnlyPDGA, setShowOnlyPDGA] = useState(false);
   const [currentSort, setCurrentSort] = useState<Sort>({ 
     field: "tournamentDate", 
     direction: "asc" 
@@ -129,7 +130,7 @@ const DiscGolfEventsComponent = () => {
     return date.toLocaleDateString();
   };
 
-  const getRegistrationStatus = (event: DiscGolfEvent): RegistrationStatus => {
+  const getRegistrationStatus = useCallback((event: DiscGolfEvent): RegistrationStatus => {
     const now = new Date();
     const registrationStart = event.registrationStart ? new Date(event.registrationStart) : null;
     const registrationEnd = event.registrationEnd ? new Date(event.registrationEnd) : null;
@@ -166,7 +167,7 @@ const DiscGolfEventsComponent = () => {
         }
 
     return RegistrationStatus.OPEN;
-  };
+  }, []);
 
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
@@ -353,15 +354,27 @@ const handleImport = async (file: File) => {
       });
   };
 
-  const openEvents = discGolfEvents.filter(event => 
-    getRegistrationStatus(event) === RegistrationStatus.OPEN
-  );
-  const otherEvents = discGolfEvents.filter(event => 
-    getRegistrationStatus(event) !== RegistrationStatus.OPEN
-  );
+  const eventsWithOpenFirst = useMemo(() => {
+  const eventsCopy = [...discGolfEvents];
+  eventsCopy.sort((a, b) => {
+    const statusA = getRegistrationStatus(a) === RegistrationStatus.OPEN ? 1 : 0;
+    const statusB = getRegistrationStatus(b) === RegistrationStatus.OPEN ? 1 : 0;
+    return statusB - statusA;
+  });
+  return eventsCopy;
+}, [discGolfEvents, getRegistrationStatus]);
 
-  const sortedDiscGolfEvents = [...openEvents, ...otherEvents];
-
+  const displayedEvents = useMemo(() => {
+    if (!showOnlyPDGA) {
+      return eventsWithOpenFirst;
+    }
+    
+    return eventsWithOpenFirst.filter(event => {
+      const pdga = event.pdga?.trim() || '';
+      return pdga !== '';
+    });
+  }, [eventsWithOpenFirst, showOnlyPDGA]);
+  
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
     {isAdmin() && (
@@ -396,11 +409,34 @@ const handleImport = async (file: File) => {
         </label>
       </div>
     )}
-      {discGolfEvents.length > 0
+    <Box sx={{ mb: 3 }}>
+      <Typography variant="h4" component="h1" sx={{ textAlign: "center", mb: 2 }}>
+        Disc Golf Events
+      </Typography>
+    <Box sx={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: 1,
+        justifyContent: 'flex-start'
+      }}>
+        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+          PDGA only
+        </Typography>
+        <Switch
+          checked={showOnlyPDGA}
+          onChange={(e) => setShowOnlyPDGA(e.target.checked)}
+          color="primary"
+        />
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {displayedEvents.length} / {eventsWithOpenFirst.length} events
+        </Typography>
+      </Box>
+    </Box>
+      {displayedEvents.length > 0
         ? (<ReusableTable
-          title="Disc Golf Events"
+          title=" "
           columns={columns}
-          rows={sortedDiscGolfEvents}
+          rows={displayedEvents}
           currentSort={currentSort}
           onSort={createSortHandler}
           getRowStyle={(row: DiscGolfEvent) => {
@@ -457,7 +493,7 @@ const handleImport = async (file: File) => {
           }}
         />)
         : (loading === false && <Alert severity="info" sx={{ maxWidth: 600, margin: "20px auto" }}>
-          You haven't registered for any events yet.
+          No events found matching your filters.
         </Alert>)
       }
       {isAdmin() && (
