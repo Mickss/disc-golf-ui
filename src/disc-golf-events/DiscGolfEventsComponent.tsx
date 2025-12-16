@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useCallback } from "react";
 import { AuthContext } from "../auth/AuthContext";
-import { Button, Dialog, DialogContent } from "@mui/material";
+import { Button, Dialog, DialogContent, Box, Switch, Typography } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import config from "../config";
@@ -20,7 +20,8 @@ export enum RegistrationStatus {
 }
 
 const DiscGolfEventsComponent = () => {
-  const [discGolfEvents, setDiscGolfEvents] = useState([]);
+  const [discGolfEvents, setDiscGolfEvents] = useState<DiscGolfEvent[]>([]);
+  const [showOnlyPDGA, setShowOnlyPDGA] = useState(false);
   const [currentSort, setCurrentSort] = useState<Sort>({ 
     field: "tournamentDate", 
     direction: "asc" 
@@ -166,7 +167,7 @@ const DiscGolfEventsComponent = () => {
         }
 
     return RegistrationStatus.OPEN;
-  };
+  }
 
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
@@ -353,15 +354,17 @@ const handleImport = async (file: File) => {
       });
   };
 
-  const openEvents = discGolfEvents.filter(event => 
+  const openEvents: DiscGolfEvent[] = discGolfEvents.filter(event =>
     getRegistrationStatus(event) === RegistrationStatus.OPEN
   );
-  const otherEvents = discGolfEvents.filter(event => 
+  const otherEvents: DiscGolfEvent[] = discGolfEvents.filter(event =>
     getRegistrationStatus(event) !== RegistrationStatus.OPEN
   );
 
-  const sortedDiscGolfEvents = [...openEvents, ...otherEvents];
-
+  const sortedDiscGolfEvents: DiscGolfEvent[] = [...openEvents, ...otherEvents];
+  const displayedEvents: DiscGolfEvent[] = showOnlyPDGA 
+    ? sortedDiscGolfEvents.filter(e => e.pdga !== '') : sortedDiscGolfEvents;
+  
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
     {isAdmin() && (
@@ -396,11 +399,33 @@ const handleImport = async (file: File) => {
         </label>
       </div>
     )}
-      {discGolfEvents.length > 0
+    <Box sx={{ mb: 3 }}>
+      <Typography variant="h4" component="h1" sx={{ textAlign: "center", mb: 2 }}>
+        Disc Golf Events
+      </Typography>
+    <Box sx={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: 1,
+        justifyContent: 'flex-start'
+      }}>
+        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+          PDGA only
+        </Typography>
+        <Switch
+          checked={showOnlyPDGA}
+          onChange={(e) => setShowOnlyPDGA(e.target.checked)}
+          color="primary"
+        />
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {displayedEvents.length} / {sortedDiscGolfEvents.length} events
+        </Typography>
+      </Box>
+    </Box>
+      {displayedEvents.length > 0
         ? (<ReusableTable
-          title="Disc Golf Events"
           columns={columns}
-          rows={sortedDiscGolfEvents}
+          rows={displayedEvents}
           currentSort={currentSort}
           onSort={createSortHandler}
           getRowStyle={(row: DiscGolfEvent) => {
@@ -457,7 +482,7 @@ const handleImport = async (file: File) => {
           }}
         />)
         : (loading === false && <Alert severity="info" sx={{ maxWidth: 600, margin: "20px auto" }}>
-          You haven't registered for any events yet.
+          No events found matching your filters.
         </Alert>)
       }
       {isAdmin() && (
