@@ -183,10 +183,9 @@ const DiscGolfEventsComponent = () => {
 
   const columns = [
   { header: "Tournament Date", field: "tournamentDate", visual: (event: DiscGolfEvent) => formatDate(event.tournamentDate) },
-  { header: "Registration Start", field: "registrationStart", visual: (event: DiscGolfEvent) => formatDate(event.registrationStart) },
-  {
-    header: "Registration",
-    field: "registration",
+  { header: "Tournament Title", field: "tournamentTitle" },
+  { header: "PDGA", field: "pdga" },
+  { header: "Registration", field: "registration",
     visual: (event: DiscGolfEvent) => {
       const status: RegistrationStatus = getRegistrationStatus(event);
       
@@ -212,9 +211,8 @@ const DiscGolfEventsComponent = () => {
       );
     }
   },
-  { header: "PDGA", field: "pdga" },
-  { header: "Tournament Title", field: "tournamentTitle" },
   { header: "Region", field: "region" },
+  { header: "Registration Start", field: "registrationStart", visual: (event: DiscGolfEvent) => formatDate(event.registrationStart) },
   { header: "Link", field: "externalLink", visual: (event: DiscGolfEvent) => {
       function goToPage(externalLink?: string) {
         if (externalLink) {
