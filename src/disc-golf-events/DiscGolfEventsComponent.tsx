@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import { AuthContext } from "../auth/AuthContext";
 import { Button, Dialog, DialogContent, Box, Switch, Typography } from "@mui/material";
 import Alert from "@mui/material/Alert";
@@ -354,16 +354,16 @@ const handleImport = async (file: File) => {
       });
   };
 
-const openEvents: DiscGolfEvent[] = discGolfEvents.filter(event =>
-  getRegistrationStatus(event) === RegistrationStatus.OPEN
-);
-const otherEvents: DiscGolfEvent[] = discGolfEvents.filter(event =>
-  getRegistrationStatus(event) !== RegistrationStatus.OPEN
-);
+  const openEvents: DiscGolfEvent[] = discGolfEvents.filter(event =>
+    getRegistrationStatus(event) === RegistrationStatus.OPEN
+  );
+  const otherEvents: DiscGolfEvent[] = discGolfEvents.filter(event =>
+    getRegistrationStatus(event) !== RegistrationStatus.OPEN
+  );
 
-const sortedDiscGolfEvents: DiscGolfEvent[] = [...openEvents, ...otherEvents];
-const displayedEvents: DiscGolfEvent[] = showOnlyPDGA 
-  ? sortedDiscGolfEvents.filter(e => e.pdga !== '') : sortedDiscGolfEvents;
+  const sortedDiscGolfEvents: DiscGolfEvent[] = [...openEvents, ...otherEvents];
+  const displayedEvents: DiscGolfEvent[] = showOnlyPDGA 
+    ? sortedDiscGolfEvents.filter(e => e.pdga !== '') : sortedDiscGolfEvents;
   
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
@@ -424,7 +424,6 @@ const displayedEvents: DiscGolfEvent[] = showOnlyPDGA
     </Box>
       {displayedEvents.length > 0
         ? (<ReusableTable
-          title=" "
           columns={columns}
           rows={displayedEvents}
           currentSort={currentSort}
