@@ -459,7 +459,7 @@ const handleImport = async (file: File) => {
                   variant="outlined"
                   color="info"
                   size="small"
-                  onClick={() => navigate(`/details/${row.id}`)}
+                  onClick={() => navigate(`/events/${row.id}`)}
                   sx={{ mr: 1 }}
                 >
                   Details

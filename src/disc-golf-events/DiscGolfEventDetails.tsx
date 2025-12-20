@@ -1,93 +1,49 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Typography, Paper, CircularProgress, Alert, Button } from '@mui/material';
-import config from '../config';
-
-interface DiscGolfEvent {
-    id: string;
-    tournamentTitle: string;
-    tournamentDate: string;
-    region: string;
-    pdga?: string;
-    externalLink?: string;
-}
+import { Container, Typography, Paper, Button} from '@mui/material';
+import { DiscGolfEvent } from './DiscGolfEvent';
+import { useLoading } from '../spinner/LoadingProvider';
+import StatusMessage from '../components/StatusMessage';
+import { EventService } from '../services/EventService';
 
 const DiscGolfEventDetails = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const { setLoading } = useLoading();
     const [event, setEvent] = useState<DiscGolfEvent | null>(null);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string>('');
 
-    const fetchEventDetails = useCallback(() => {
-        if (!id) {
-            setError('No tournament ID');
-            setLoading(false);
-            return;
-        }
-
-        setLoading(true);
-        setError('');
-
-        const url = `${config.discGolfServiceUrl}/public/events/${id}`;
-
-        fetch(url, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error(`No tournament found (status: ${res.status})`);
-                }
-                return res.json();
-            })
-            .then((data: DiscGolfEvent) => {
-                setEvent(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error('Tournament download error:', err);
-                setError(err.message || 'The tournament data could not be downloaded.');
-                setLoading(false);
-            });
-    }, [id]);
-
     useEffect(() => {
-        fetchEventDetails();
-    }, [fetchEventDetails]);
+        const fetchEventDetails = async () => {
+            setLoading(true);
+            setError('');
+            try {
+                const data = await EventService.getEventById(id!);
+                setEvent(data);
+            } catch (err: any) {
+                console.error('Tournament fetching error:', err);
+                setError(err.message || 'The tournament data could not be fetched.');
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    if (loading) {
-        return (
-            <Container maxWidth="md" sx={{ mt: 5, display: 'flex', justifyContent: 'center' }}>
-                <CircularProgress />
-            </Container>
-        );
-    }
+        if (id) {
+            fetchEventDetails();
+        }
+    }, [id, setLoading]);
 
     if (error) {
-        return (
-            <Container maxWidth="md" sx={{ mt: 5 }}>
-                <Alert severity="error">{error}</Alert>
-            </Container>
-        );
+        return <StatusMessage severity="error" message={error} />;
     }
 
-    if (!event) {
-        return (
-            <Container maxWidth="md" sx={{ mt: 5 }}>
-                <Alert severity="warning">Tournament not found</Alert>
-            </Container>
-        );
-    }
+    if (!event) return null;
 
     return (
         <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
             <Button
                 variant="outlined"
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/events')}
                 sx={{ mb: 2 }}
             >
                 ⬅️ Back to Events
@@ -114,12 +70,11 @@ const DiscGolfEventDetails = () => {
 
                 {event.externalLink && (
                     <div style={{ marginTop: '16px' }}>
-                        {event.externalLink.split(';').filter(link => link.trim() !== '').map((link, index, array) => (
+                        {event.externalLink.split(';').filter(Boolean).map((link, index, array) => (
                             <Typography key={index} variant="body2" sx={{ mt: 1 }}>
                                 <a
-                                    href={link.trim()}
+                                    href={link}
                                     target="_blank"
-                                    rel="noopener noreferrer"
                                     style={{ color: '#1976d2', textDecoration: 'none' }}
                                 >
                                     Tournament website{array.length > 1 ? ` ${index + 1}` : ''} ➡️

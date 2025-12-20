@@ -25,8 +25,8 @@ export default function App() {
       <Header />
 
       <Routes>
-        <Route path="/details/:id" element={ <DiscGolfEventDetails /> } />
         <Route path="/" element={ <DiscGolfEventsComponent /> } />
+        <Route path="/events/:id" element={ <DiscGolfEventDetails /> } />
         <Route path="/sign-in" element={ <SignInComponent /> } />
         <Route path="/5add25" element={ <AddEventComponent /> } />
         <Route path="/5edit35" element={ <EditEventComponent /> } />
