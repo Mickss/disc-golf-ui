@@ -132,10 +132,16 @@ const DiscGolfEventsComponent = () => {
     return date.toLocaleDateString();
   };
 
+  const endOfDay = (date: Date): Date => {
+    const d = new Date(date);
+    d.setHours(23, 59, 59, 999);
+    return d;
+  };
+
   const getRegistrationStatus = (event: DiscGolfEvent): RegistrationStatus => {
     const now = new Date();
     const registrationStart = event.registrationStart ? new Date(event.registrationStart) : null;
-    const registrationEnd = event.registrationEnd ? new Date(event.registrationEnd) : null;
+    const registrationEnd = event.registrationEnd ? endOfDay(new Date(event.registrationEnd)) : null;
     const tournamentDate = event.tournamentDate ? new Date(event.tournamentDate) : null;
 
       if (tournamentDate && now > tournamentDate) {
@@ -145,15 +151,11 @@ const DiscGolfEventsComponent = () => {
         if (now <= threeWeeksAfter) {
           return RegistrationStatus.PASSED;
         }
+          return RegistrationStatus.CLOSED;
       }
 
-        if (tournamentDate) {
-          const threeWeeksAfter = new Date(tournamentDate);
-          threeWeeksAfter.setDate(threeWeeksAfter.getDate() + 21);
-    
-          if (now > threeWeeksAfter) {
-            return RegistrationStatus.CLOSED;
-          }
+      if (registrationEnd && now > registrationEnd && tournamentDate && now < tournamentDate) {
+          return RegistrationStatus.PASSED;
         }
 
         if (registrationEnd && now > registrationEnd) {
