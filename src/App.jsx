@@ -13,6 +13,7 @@ import MyEvents from "./disc-golf-events/MyEvents";
 import ContactComponent from "./disc-golf-events/ContactComponent";
 import React from "react";
 import GlobalLoading from "./spinner/GlobalLoading";
+import DiscGolfEventDetails from "./disc-golf-events/DiscGolfEventDetails";
 
 export default function App() {
 
@@ -25,6 +26,7 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={ <DiscGolfEventsComponent /> } />
+        <Route path="/events/:id" element={ <DiscGolfEventDetails /> } />
         <Route path="/sign-in" element={ <SignInComponent /> } />
         <Route path="/5add25" element={ <AddEventComponent /> } />
         <Route path="/5edit35" element={ <EditEventComponent /> } />

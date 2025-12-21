@@ -12,6 +12,7 @@ import { DiscGolfEvent } from "./DiscGolfEvent";
 import { SnackbarState } from "./SnackbarState";
 import { Sort } from "./Sort";
 import ConfirmationModal from "./ConfirmationModal";
+import { useNavigate } from 'react-router-dom';
 
 export enum RegistrationStatus {
   OPEN = "OPEN",
@@ -20,6 +21,7 @@ export enum RegistrationStatus {
 }
 
 const DiscGolfEventsComponent = () => {
+  const navigate = useNavigate();
   const [discGolfEvents, setDiscGolfEvents] = useState<DiscGolfEvent[]>([]);
   const [showOnlyPDGA, setShowOnlyPDGA] = useState(false);
   const [currentSort, setCurrentSort] = useState<Sort>({ 
@@ -451,6 +453,18 @@ const handleImport = async (file: File) => {
           renderActions={(row: DiscGolfEvent) => {
             const actions: React.ReactElement[] = [];
             if (isAdmin()) {
+              actions.push(
+                <Button
+                  key="details"
+                  variant="outlined"
+                  color="info"
+                  size="small"
+                  onClick={() => navigate(`/events/${row.id}`)}
+                  sx={{ mr: 1 }}
+                >
+                  Details
+                </Button>
+              );
               actions.push(
                 <Button
                   key="edit"
