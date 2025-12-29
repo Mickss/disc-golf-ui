@@ -43,7 +43,7 @@ const DiscGolfEventDetails = () => {
                 <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
                     <Button
                         variant="outlined"
-                        onClick={() => navigate('/events')}
+                        onClick={() => navigate('/')}
                         sx={{ mb: 2 }}
                     >
                         ⬅️ Back to Events
