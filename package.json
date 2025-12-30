@@ -7,7 +7,8 @@
     "dev": "vite",
     "build:dev": "vite build --mode dev",
     "build:uat": "vite build --mode uat",
-    "build:prod": "vite build --mode prod"
+    "build:prod": "vite build --mode prod",
+    "test": "vitest run"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -21,6 +22,7 @@
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vitest": "^4.0.16"
   }
 }
