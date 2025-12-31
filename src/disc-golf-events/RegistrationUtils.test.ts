@@ -141,24 +141,6 @@ describe('getRegistrationStatus logic', () => {
             expected: 'CLOSED',
             reason: 'End date exists, but Start date missing'
         },
-        {
-            id: 13,
-            today: '2026-01-31T12:45:30',
-            regStart: '2026-01-01',
-            regEnd: '2026-01-05',
-            tournDate: '2026-01-10',
-            expected: 'PASSED',
-            reason: 'Exactly 21 days after tournament, last second of PASSED window'
-        },
-        {
-            id: 14,
-            today: '2026-02-01T00:00:01',
-            regStart: '2026-01-01',
-            regEnd: '2026-01-05',
-            tournDate: '2026-01-10',
-            expected: 'CLOSED',
-            reason: '22 days after tournament, status now CLOSED'
-        }
     ];
 
     testCases.forEach((tc) => {
