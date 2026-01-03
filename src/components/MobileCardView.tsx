@@ -1,115 +1,61 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
 import { DiscGolfEvent } from "../disc-golf-events/DiscGolfEvent";
-import { TableColumn } from "../disc-golf-events/TableColumn";
+import { RegistrationStatus } from "./RegistrationStatus";
+import { EventLinks } from "./EventLinks";
 
-const MobileCardView = ({
-    rows,
-    columns,
-    renderActions,
-    getRowStyle,
-}: {
-    rows: DiscGolfEvent[];
-    columns: TableColumn[];
-    renderActions?: (row: DiscGolfEvent) => React.ReactElement[];
-    getRowStyle?: (row: DiscGolfEvent) => any;
-}) => {
-    const hasActions = renderActions && rows.some(row => {
-        const actions = renderActions(row);
-        return actions && actions.length > 0;
-    });
+interface MobileCardViewProps {
+    events: DiscGolfEvent[];
+    renderActions?: (event: DiscGolfEvent) => React.ReactElement[];
+    getRowStyle?: (event: DiscGolfEvent) => any;
+}
 
-    const visibleColumns = columns.filter(col =>
-        col.header !== "Registration Start"
-    );
-
-    const tournamentDateCol = columns.find(col => col.header === "Tournament Date");
-    const titleCol = columns.find(col => col.header === "Tournament Title");
-
-    const otherColumns = visibleColumns.filter(col =>
-        col.header !== "Tournament Date" &&
-        col.header !== "Tournament Title"
-    );
-
+const MobileCardView = ({ events, renderActions, getRowStyle }: MobileCardViewProps) => {
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.15 }}>
-            {rows.map((row, rowIndex) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            {events.map((event, index) => (
                 <Paper
-                    key={row.id || rowIndex}
-                    elevation={1}
+                    key={event.id || index}
+                    elevation={2}
                     sx={{
-                        ...(getRowStyle ? getRowStyle(row) : {}),
-                        transition: 'all 0.2s ease',
-                        p: 0.15,
+                        ...(getRowStyle ? getRowStyle(event) : {}),
+                        p: 0.25,
                     }}
                 >
-                    <Grid container spacing={0.15} alignItems="center">
-                        {tournamentDateCol && (
-                            <Grid item xs={12}>
-                                <Typography
-                                    variant="caption"
-                                    sx={{
-                                        fontWeight: 600,
-                                        color: 'text.secondary',
-                                        fontSize: '0.7rem',
-                                        lineHeight: 1,
-                                    }}
-                                >
-                                    {tournamentDateCol.visual
-                                        ? tournamentDateCol.visual(row)
-                                        : (row[tournamentDateCol.field as keyof DiscGolfEvent] as React.ReactNode)
-                                    }
-                                </Typography>
-                            </Grid>
-                        )}
-                        {titleCol && (
-                            <Grid item xs={12}>
-                                <Typography
-                                    variant="body2"
-                                    sx={{
-                                        fontWeight: 700,
-                                        color: 'primary.main',
-                                        fontSize: '0.775rem',
-                                        lineHeight: 1,
-                                    }}
-                                >
-                                    {titleCol.visual
-                                        ? titleCol.visual(row)
-                                        : (row[titleCol.field as keyof DiscGolfEvent] as React.ReactNode)
-                                    }
-                                </Typography>
-                            </Grid>
-                        )}
-                        {otherColumns.map((column, colIndex) => (
-                            <Grid
-                                item
-                                xs={true}
-                                key={colIndex}
-                            >
-                                <Typography
-                                    variant="caption"
-                                    sx={{
-                                        fontWeight: 400,
-                                        color: 'text.primary',
-                                        fontSize: '0.75rem',
-                                        lineHeight: 1,
-                                    }}
-                                >
-                                    {column.visual
-                                        ? column.visual(row)
-                                        : (row[column.field as keyof DiscGolfEvent] as React.ReactNode)
-                                    }
-                                </Typography>
-                            </Grid>
-                        ))}
-
-                        {hasActions && (
-                            <Grid item xs="auto">
-                                <Box sx={{ display: 'flex', gap: 0.5 }}>
-                                    {renderActions(row)}
+                    <Grid container spacing={0.5}>
+                        <Grid size={12}>
+                            <Typography variant="caption" sx={{ fontWeight: 600, color: 'text.secondary', fontSize: '0.8rem' }}>
+                                {new Date(event.tournamentDate).toLocaleDateString('pl-PL')}
+                            </Typography>
+                        </Grid>
+                        <Grid size={12}>
+                            <Typography variant="body2" sx={{ fontWeight: 700, color: 'primary.main', fontSize: '0.85rem' }}>
+                                {event.tournamentTitle}
+                            </Typography>
+                        </Grid>
+                        <Grid size={12}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                                    {event.pdga && (
+                                        <Typography variant="caption" sx={{ fontSize: '0.75rem' }}>
+                                            {event.pdga}
+                                        </Typography>
+                                    )}
+                                    <RegistrationStatus event={event} />
+                                    <Typography variant="caption" sx={{ fontSize: '0.75rem' }}>
+                                        {event.region}
+                                    </Typography>
+                                </Box>
+                                <EventLinks event={event} />
+                            </Box>
+                        </Grid>
+                        {renderActions && (
+                            <Grid size={12}>
+                                <Box sx={{ display: 'flex', gap: 0.35, mt: 0.25 }}>
+                                    {renderActions(event)}
                                 </Box>
                             </Grid>
                         )}

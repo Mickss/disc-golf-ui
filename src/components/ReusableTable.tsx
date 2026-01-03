@@ -32,7 +32,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
         const newDirection = isAscending ? "desc" : "asc";
 
         if (onSort) {
-            await onSort({field: field, direction: newDirection});
+            await onSort({ field: field, direction: newDirection });
         }
     };
 
@@ -51,8 +51,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
 
             {isMobile ? (
                 <MobileCardView
-                    rows={rows}
-                    columns={columns}
+                    events={rows}
                     renderActions={renderActions}
                     getRowStyle={getRowStyle}
                 />
@@ -79,9 +78,9 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                         </TableHead>
                         <TableBody>
                             {rows.map((row, rowIndex) => (
-                                <TableRow 
-                                    key={row.id || rowIndex} 
-                                    sx={{ 
+                                <TableRow
+                                    key={row.id || rowIndex}
+                                    sx={{
                                         "&:last-child td, &:last-child th": { border: 0 },
                                         transition: 'background-color 0.2s ease',
                                         ...(getRowStyle ? getRowStyle(row) : {})

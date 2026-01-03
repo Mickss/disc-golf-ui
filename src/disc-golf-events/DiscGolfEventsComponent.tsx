@@ -13,7 +13,9 @@ import { SnackbarState } from "./SnackbarState";
 import { Sort } from "./Sort";
 import ConfirmationModal from "./ConfirmationModal";
 import { useNavigate } from 'react-router-dom';
-import { getRegistrationStatus, RegistrationStatus } from "./RegistrationUtils";
+import { RegistrationStatus as RegistrationStatusComponent } from "../components/RegistrationStatus";
+import { getRegistrationStatus, RegistrationStatus as StatusEnum } from "./RegistrationUtils";
+import { EventLinks } from "../components/EventLinks";
 
 const DiscGolfEventsComponent = () => {
   const navigate = useNavigate();
@@ -144,62 +146,12 @@ const DiscGolfEventsComponent = () => {
   { header: "Tournament Title", field: "tournamentTitle" },
   { header: "PDGA", field: "pdga" },
   { header: "Registration", field: "registration",
-    visual: (event: DiscGolfEvent) => {
-      const status: RegistrationStatus = getRegistrationStatus(event);
-      
-      const statusStyles = {
-        OPEN: { bg: '#d1fae5', color: '#065f46' },
-        CLOSED: { bg: '#f3f4f6', color: '#6b7280' },
-        PASSED: { bg: '#e5e7eb', color: '#4b5563' }
-      };
-      
-      const style = statusStyles[status] || statusStyles.CLOSED;
-      
-      return (
-        <span style={{
-          padding: '4px 8px',
-          fontSize: '12px',
-          fontWeight: 600,
-          borderRadius: '4px',
-          backgroundColor: style.bg,
-          color: style.color
-        }}>
-          {status}
-        </span>
-      );
-    }
+    visual: (event: DiscGolfEvent) => <RegistrationStatusComponent event={event} />
   },
   { header: "Region", field: "region" },
   { header: "Registration Start", field: "registrationStart", visual: (event: DiscGolfEvent) => formatDate(event.registrationStart) },
-  { header: "Link", field: "externalLink", visual: (event: DiscGolfEvent) => {
-      function goToPage(externalLink?: string) {
-        if (externalLink) {
-          window.open(externalLink, '_blank');
-        }
-      }
-
-      const links = event.externalLink 
-      ? event.externalLink.split(';').filter(link => link !== '')
-      : [];
-
-      if (links.length === 0) return null;
-
-      return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          {links.map((link, index) => (
-            <Button
-              key={index}
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => goToPage(link)}
-            >
-              {links.length > 1 ? `Link ${index + 1}` : 'Link'}
-            </Button>
-          ))}
-        </div>
-      );
-    },
+  { header: "Link", field: "externalLink", 
+    visual: (event: DiscGolfEvent) => <EventLinks event={event} />
   }
 ];
 
@@ -311,10 +263,10 @@ const handleImport = async (file: File) => {
   };
 
   const openEvents: DiscGolfEvent[] = discGolfEvents.filter(event =>
-    getRegistrationStatus(event) === RegistrationStatus.OPEN
+    getRegistrationStatus(event) === StatusEnum.OPEN
   );
   const otherEvents: DiscGolfEvent[] = discGolfEvents.filter(event =>
-    getRegistrationStatus(event) !== RegistrationStatus.OPEN
+    getRegistrationStatus(event) !== StatusEnum.OPEN
   );
 
   const sortedDiscGolfEvents: DiscGolfEvent[] = [...openEvents, ...otherEvents];
@@ -387,7 +339,7 @@ const handleImport = async (file: File) => {
           getRowStyle={(row: DiscGolfEvent) => {
             const status = getRegistrationStatus(row);
             
-            if (status === RegistrationStatus.OPEN) {
+            if (status === StatusEnum.OPEN) {
               return {
                 backgroundColor: 'inherit',
                 opacity: 1,
