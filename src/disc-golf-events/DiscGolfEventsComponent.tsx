@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { RegistrationStatus as RegistrationStatusComponent } from "../components/RegistrationStatus";
 import { getRegistrationStatus, RegistrationStatus as StatusEnum } from "./RegistrationUtils";
 import { EventLinks } from "../components/EventLinks";
+import { formatDate } from "../utils/dateUtils";
 
 const DiscGolfEventsComponent = () => {
   const navigate = useNavigate();
@@ -122,12 +123,6 @@ const DiscGolfEventsComponent = () => {
   useEffect(() => {
     fetchEvents();
   }, [currentSort, fetchEvents]);
-
-  const formatDate = (dateString: string) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
 
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });

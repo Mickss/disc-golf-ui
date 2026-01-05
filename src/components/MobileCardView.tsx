@@ -1,68 +1,86 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
 import { DiscGolfEvent } from "../disc-golf-events/DiscGolfEvent";
 import { RegistrationStatus } from "./RegistrationStatus";
 import { EventLinks } from "./EventLinks";
+import { formatDate } from "../utils/dateUtils";
 
-interface MobileCardViewProps {
+const MobileCardView = ({ events, renderActions, getRowStyle }: {
     events: DiscGolfEvent[];
     renderActions?: (event: DiscGolfEvent) => React.ReactElement[];
     getRowStyle?: (event: DiscGolfEvent) => any;
-}
-
-const MobileCardView = ({ events, renderActions, getRowStyle }: MobileCardViewProps) => {
+}) => {
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            {events.map((event, index) => (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {events.map((event) => (
                 <Paper
-                    key={event.id || index}
-                    elevation={2}
+                    key={event.id}
                     sx={{
                         ...(getRowStyle ? getRowStyle(event) : {}),
-                        p: 0.25,
+                        padding: '8px',
                     }}
                 >
-                    <Grid container spacing={0.5}>
-                        <Grid size={12}>
-                            <Typography variant="caption" sx={{ fontWeight: 600, color: 'text.secondary', fontSize: '0.8rem' }}>
-                                {new Date(event.tournamentDate).toLocaleDateString('pl-PL')}
+                    <div style={{ marginBottom: '2px' }}>
+                        <Typography
+                            sx={{
+                                fontWeight: 600,
+                                color: 'text.secondary',
+                                fontSize: '0.7rem',
+                            }}
+                        >
+                            {formatDate(event.tournamentDate)}
+                        </Typography>
+                    </div>
+
+                    <div style={{ marginBottom: '4px' }}>
+                        <Typography
+                            sx={{
+                                fontWeight: 700,
+                                color: 'primary.main',
+                                fontSize: '0.875rem',
+                            }}
+                        >
+                            {event.tournamentTitle}
+                        </Typography>
+                    </div>
+
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: '8px'
+                    }}>
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                            {event.pdga && (
+                                <Typography sx={{ fontSize: '0.75rem' }}>
+                                    {event.pdga}
+                                </Typography>
+                            )}
+                            <RegistrationStatus event={event} />
+                            <Typography sx={{ fontSize: '0.75rem' }}>
+                                {event.region}
                             </Typography>
-                        </Grid>
-                        <Grid size={12}>
-                            <Typography variant="body2" sx={{ fontWeight: 700, color: 'primary.main', fontSize: '0.85rem' }}>
-                                {event.tournamentTitle}
-                            </Typography>
-                        </Grid>
-                        <Grid size={12}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                                    {event.pdga && (
-                                        <Typography variant="caption" sx={{ fontSize: '0.75rem' }}>
-                                            {event.pdga}
-                                        </Typography>
-                                    )}
-                                    <RegistrationStatus event={event} />
-                                    <Typography variant="caption" sx={{ fontSize: '0.75rem' }}>
-                                        {event.region}
-                                    </Typography>
-                                </Box>
-                                <EventLinks event={event} />
-                            </Box>
-                        </Grid>
-                        {renderActions && (
-                            <Grid size={12}>
-                                <Box sx={{ display: 'flex', gap: 0.35, mt: 0.25 }}>
-                                    {renderActions(event)}
-                                </Box>
-                            </Grid>
-                        )}
-                    </Grid>
+                        </div>
+
+                        <div style={{ flexShrink: 0 }}>
+                            <EventLinks event={event} />
+                        </div>
+                    </div>
+
+                    {renderActions && (
+                        <div style={{
+                            display: 'flex',
+                            gap: '8px',
+                            marginTop: '8px',
+                            justifyContent: 'flex-start'
+                        }}>
+                            {renderActions(event)}
+                        </div>
+                    )}
                 </Paper>
             ))}
-        </Box>
+        </div>
     );
 };
 
