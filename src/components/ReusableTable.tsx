@@ -61,7 +61,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                         <TableHead>
                             <TableRow>
                                 {columns.map((column) => (
-                                    <TableCell key={column.header}>
+                                    <TableCell key={column.header} sx={{whiteSpace: "nowrap"}}>
                                         {onSort ? (
                                             <TableSortLabel
                                                 active={currentSort && currentSort.field === column.field}
