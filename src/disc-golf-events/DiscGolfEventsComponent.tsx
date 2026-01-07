@@ -17,6 +17,7 @@ import { RegistrationStatus as RegistrationStatusComponent } from "../components
 import { getRegistrationStatus, RegistrationStatus as StatusEnum } from "./RegistrationUtils";
 import { EventLinks } from "../components/EventLinks";
 import { formatDate } from "../utils/dateUtils";
+import { TableColumn } from "./TableColumn";
 
 const DiscGolfEventsComponent = () => {
   const navigate = useNavigate();
@@ -136,16 +137,43 @@ const DiscGolfEventsComponent = () => {
     );
   }
 
-  const columns = [
-  { header: "Tournament Date", field: "tournamentDate", visual: (event: DiscGolfEvent) => formatDate(event.tournamentDate) },
-  { header: "Tournament Title", field: "tournamentTitle" },
-  { header: "PDGA", field: "pdga" },
-  { header: "Registration", field: "registration",
+  const columns: TableColumn[] = [
+  { 
+    header: "Tournament Date", 
+    field: "tournamentDate", 
+    width: "120px",
+    visual: (event: DiscGolfEvent) => formatDate(event.tournamentDate) 
+  },
+  { 
+    header: "Tournament Title", 
+    field: "tournamentTitle",
+  },
+  { 
+    header: "PDGA", 
+    field: "pdga",
+    width: "80px"
+  },
+  { 
+    header: "Registration", 
+    field: "registration",
+    width: "140px",
     visual: (event: DiscGolfEvent) => <RegistrationStatusComponent event={event} />
   },
-  { header: "Region", field: "region" },
-  { header: "Registration Start", field: "registrationStart", visual: (event: DiscGolfEvent) => formatDate(event.registrationStart) },
-  { header: "Link", field: "externalLink", 
+  { 
+    header: "Region", 
+    field: "region",
+    width: "20%"
+  },
+  { 
+    header: "Registration Start", 
+    field: "registrationStart", 
+    width: "120px",
+    visual: (event: DiscGolfEvent) => formatDate(event.registrationStart) 
+  },
+  { 
+    header: "Link", 
+    field: "externalLink", 
+    width: "100px",
     visual: (event: DiscGolfEvent) => <EventLinks event={event} />
   }
 ];

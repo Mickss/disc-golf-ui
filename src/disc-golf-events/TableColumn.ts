@@ -3,6 +3,6 @@ import { DiscGolfEvent } from "./DiscGolfEvent";
 export type TableColumn = {
   header: string;
   field: string;
-  align?: "left" | "right" | "center";
+  width?: string;
   visual?: (row: DiscGolfEvent) => React.ReactNode;
 };
