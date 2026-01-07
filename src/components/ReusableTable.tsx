@@ -61,7 +61,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                         <TableHead>
                             <TableRow>
                                 {columns.map((column) => (
-                                    <TableCell key={column.header} sx={{whiteSpace: "nowrap"}}>
+                                    <TableCell key={column.header} sx={{whiteSpace: "nowrap", width: column.width}}>
                                         {onSort ? (
                                             <TableSortLabel
                                                 active={currentSort && currentSort.field === column.field}
@@ -73,7 +73,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                                         ) : column.header}
                                     </TableCell>
                                 ))}
-                                {hasActions && <TableCell align="right">Actions</TableCell>}
+                                {hasActions && <TableCell align="right" sx={{ width: '100px' }}>Actions</TableCell>}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -91,11 +91,9 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                                             key={colIndex}
                                             component="th"
                                             scope="row"
-                                            align={column.align || "left"}
                                             sx={{
                                                 whiteSpace: "normal",
                                                 overflowWrap: "break-word",
-                                                maxWidth: 250,
                                             }}
                                         >
                                             {column.visual ? column.visual(row) : row[column.field as keyof DiscGolfEvent]}
