@@ -94,7 +94,6 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                                             sx={{
                                                 whiteSpace: "normal",
                                                 overflowWrap: "break-word",
-                                                wordBreak: "break-word",
                                             }}
                                         >
                                             {column.visual ? column.visual(row) : row[column.field as keyof DiscGolfEvent]}

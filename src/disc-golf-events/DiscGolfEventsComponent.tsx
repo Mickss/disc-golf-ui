@@ -147,6 +147,7 @@ const DiscGolfEventsComponent = () => {
   { 
     header: "Tournament Title", 
     field: "tournamentTitle",
+    minWidth: "200px",
   },
   { 
     header: "PDGA", 
