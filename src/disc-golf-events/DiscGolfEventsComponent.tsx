@@ -286,14 +286,19 @@ const handleImport = async (file: File) => {
       });
   };
 
-  const openEvents: DiscGolfEvent[] = discGolfEvents.filter(event =>
-    getRegistrationStatus(event) === StatusEnum.OPEN
-  );
-  const otherEvents: DiscGolfEvent[] = discGolfEvents.filter(event =>
-    getRegistrationStatus(event) !== StatusEnum.OPEN
-  );
+  const statusOrder = {
+    [StatusEnum.OPEN]: 1,
+    [StatusEnum.CLOSED]: 2,
+    [StatusEnum.PASSED]: 3,
+    [StatusEnum.ARCHIVED]: 4
+  };
 
-  const sortedDiscGolfEvents: DiscGolfEvent[] = [...openEvents, ...otherEvents];
+  const sortedDiscGolfEvents: DiscGolfEvent[] = [...discGolfEvents].sort((a, b) => {
+    const statusA = getRegistrationStatus(a);
+    const statusB = getRegistrationStatus(b);
+    return statusOrder[statusA] - statusOrder[statusB];
+  });
+  
   const displayedEvents: DiscGolfEvent[] = showOnlyPDGA 
     ? sortedDiscGolfEvents.filter(e => e.pdga !== '') : sortedDiscGolfEvents;
   

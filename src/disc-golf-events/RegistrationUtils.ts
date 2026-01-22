@@ -4,6 +4,7 @@ export enum RegistrationStatus {
     OPEN = "OPEN",
     CLOSED = "CLOSED",
     PASSED = "PASSED",
+    ARCHIVED = "ARCHIVED",
 }
 
 const endOfDay = (date: Date): Date => {
@@ -19,13 +20,13 @@ export const getRegistrationStatus = (event: DiscGolfEvent): RegistrationStatus 
     const tournamentDate = event.tournamentDate ? endOfDay(new Date(event.tournamentDate)) : null;
 
     if (tournamentDate && now > tournamentDate) {
-        const threeWeeksAfter = new Date(tournamentDate);
-        threeWeeksAfter.setDate(threeWeeksAfter.getDate() + 21);
+        const twoWeeksAfter = new Date(tournamentDate);
+        twoWeeksAfter.setDate(twoWeeksAfter.getDate() + 14);
 
-        if (now <= threeWeeksAfter) {
+        if (now <= twoWeeksAfter) {
             return RegistrationStatus.PASSED;
         }
-        return RegistrationStatus.CLOSED;
+        return RegistrationStatus.ARCHIVED;
     }
 
     if (registrationEnd && now > registrationEnd) {

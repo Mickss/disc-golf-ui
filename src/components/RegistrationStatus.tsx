@@ -7,8 +7,9 @@ export const RegistrationStatus = ({ event }: { event: DiscGolfEvent }) => {
 
     const statusStyles = {
         [StatusEnum.OPEN]: { bg: '#d1fae5', color: '#065f46' },
-        [StatusEnum.CLOSED]: { bg: '#f3f4f6', color: '#6b7280' },
-        [StatusEnum.PASSED]: { bg: '#e5e7eb', color: '#4b5563' },
+        [StatusEnum.CLOSED]: { bg: '#f3f4f6', color: '#3b3d3f' },
+        [StatusEnum.PASSED]: { bg: '#e5e7eb', color: '#9e3c24' },
+        [StatusEnum.ARCHIVED]: { bg: '#e5e7eb', color: '#8d3fa5' },
     };
 
     const style = statusStyles[status] || statusStyles[StatusEnum.CLOSED];
