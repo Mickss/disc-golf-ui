@@ -69,11 +69,21 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
             <DialogContent>
                 <TextField
                     margin="dense"
-                    label="Tournament Date"
+                    label="Tournament Start"
                     type="date"
                     fullWidth
-                    name="tournamentDate"
-                    value={editedEvent.tournamentDate}
+                    name="tournamentDateStart"
+                    value={editedEvent.tournamentDateStart}
+                    onChange={handleChange}
+                    InputLabelProps={{ shrink: true }}
+                />
+                <TextField
+                    margin="dense"
+                    label="Tournament End"
+                    type="date"
+                    fullWidth
+                    name="tournamentDateEnd"
+                    value={editedEvent.tournamentDateEnd}
                     onChange={handleChange}
                     InputLabelProps={{ shrink: true }}
                 />
@@ -126,6 +136,24 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
                     fullWidth
                     name="region"
                     value={editedEvent.region}
+                    onChange={handleChange}
+                />
+                <TextField
+                    margin="dense"
+                    label="Tournament Director"
+                    type="text"
+                    fullWidth
+                    name="tournamentDirector"
+                    value={editedEvent.tournamentDirector || ''}
+                    onChange={handleChange}
+                />
+                <TextField
+                    margin="dense"
+                    label="Capacity"
+                    type="number"
+                    fullWidth
+                    name="capacity"
+                    value={editedEvent.capacity || ''}
                     onChange={handleChange}
                 />
                 {links.map((link, index) => (

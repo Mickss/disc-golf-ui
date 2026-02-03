@@ -29,7 +29,7 @@ const MobileCardView = ({ events, renderActions, getRowStyle }: {
                                 fontSize: '0.7rem',
                             }}
                         >
-                            {formatDate(event.tournamentDate)}
+                            {formatDate(event.tournamentDateStart)}
                         </Typography>
                     </div>
 
