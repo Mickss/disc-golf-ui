@@ -24,7 +24,7 @@ const DiscGolfEventsComponent = () => {
   const [discGolfEvents, setDiscGolfEvents] = useState<DiscGolfEvent[]>([]);
   const [showOnlyPDGA, setShowOnlyPDGA] = useState(false);
   const [currentSort, setCurrentSort] = useState<Sort>({ 
-    field: "tournamentDate", 
+    field: "tournamentDateStart", 
     direction: "asc" 
   });
   const [error, setError] = useState(null);
@@ -139,10 +139,10 @@ const DiscGolfEventsComponent = () => {
 
   const columns: TableColumn[] = [
   { 
-    header: "Tournament Date", 
-    field: "tournamentDate", 
+    header: "Tournament Start", 
+    field: "tournamentDateStart", 
     width: "120px",
-    visual: (event: DiscGolfEvent) => formatDate(event.tournamentDate) 
+    visual: (event: DiscGolfEvent) => formatDate(event.tournamentDateStart) 
   },
   { 
     header: "Tournament Title", 

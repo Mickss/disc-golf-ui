@@ -11,13 +11,16 @@ type AddEventProps = {
 
 const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, setSnackbar }) => {
     const [eventData, setEventData] = useState({
-        tournamentDate: "",
+        tournamentDateStart: "",
+        tournamentDateEnd: "",
         registrationStart: "",
         registrationEnd: "",
         pdga: "",
         tournamentTitle: "",
         region: "",
-        externalLink: ""
+        externalLink: "",
+        tournamentDirector: "",
+        capacity: ""
     });
 
     const [touched, setTouched] = useState<{ tournamentTitle?: boolean }>({});
@@ -58,11 +61,16 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
             return;
         }
 
+        const payload = {
+            ...eventData,
+            capacity: eventData.capacity ? parseInt(eventData.capacity) : null
+        };
+
         fetch(`${config.discGolfServiceUrl}/events`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify(eventData),
+            body: JSON.stringify(payload),
         })
             .then((response) => {
                 if (!response.ok) {
@@ -92,15 +100,23 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
             <DialogContent>
                 <TextField
                     margin="dense"
-                    label="Tournament Date"
+                    label="Tournament Start"
                     type="date"
                     fullWidth
-                    name="tournamentDate"
-                    value={eventData.tournamentDate}
+                    name="tournamentDateStart"
+                    value={eventData.tournamentDateStart}
                     onChange={handleChange}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
+                    InputLabelProps={{ shrink: true }}
+                />
+                <TextField
+                    margin="dense"
+                    label="Tournament End"
+                    type="date"
+                    fullWidth
+                    name="tournamentDateEnd"
+                    value={eventData.tournamentDateEnd}
+                    onChange={handleChange}
+                    InputLabelProps={{ shrink: true }}
                 />
                 <TextField
                     margin="dense"
@@ -158,6 +174,24 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                     fullWidth
                     name="region"
                     value={eventData.region}
+                    onChange={handleChange}
+                />
+                <TextField
+                    margin="dense"
+                    label="Tournament Director"
+                    type="text"
+                    fullWidth
+                    name="tournamentDirector"
+                    value={eventData.tournamentDirector}
+                    onChange={handleChange}
+                />
+                <TextField
+                    margin="dense"
+                    label="Capacity"
+                    type="number"
+                    fullWidth
+                    name="capacity"
+                    value={eventData.capacity}
                     onChange={handleChange}
                 />
                 {links.map((link, index) => (
