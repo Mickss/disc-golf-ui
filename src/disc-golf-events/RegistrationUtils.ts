@@ -17,10 +17,10 @@ export const getRegistrationStatus = (event: DiscGolfEvent): RegistrationStatus 
     const now = new Date();
     const registrationStart = event.registrationStart ? new Date(event.registrationStart) : null;
     const registrationEnd = event.registrationEnd ? endOfDay(new Date(event.registrationEnd)) : null;
-    const tournamentDate = event.tournamentDate ? endOfDay(new Date(event.tournamentDate)) : null;
+    const tournamentDateEnd  = event.tournamentDateEnd  ? endOfDay(new Date(event.tournamentDateEnd )) : null;
 
-    if (tournamentDate && now > tournamentDate) {
-        const twoWeeksAfter = new Date(tournamentDate);
+    if (tournamentDateEnd && now > tournamentDateEnd) {
+        const twoWeeksAfter = new Date(tournamentDateEnd);
         twoWeeksAfter.setDate(twoWeeksAfter.getDate() + 14);
 
         if (now <= twoWeeksAfter) {
