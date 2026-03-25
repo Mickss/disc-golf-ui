@@ -14,6 +14,7 @@ import { TableColumn } from "../disc-golf-events/TableColumn";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import MobileCardView from "./MobileCardView";
+import { useLanguage } from "../LanguageContext";
 
 const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderActions, getRowStyle }: {
     title?: string,
@@ -26,6 +27,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
 }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const { t } = useLanguage();
 
     const handleSortRequest = async (field: string) => {
         const isAscending = currentSort && currentSort.field === field && currentSort.direction === "asc";
@@ -57,7 +59,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                 />
             ) : (
                 <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="reusable table">
+                    <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} aria-label="reusable table">
                         <TableHead>
                             <TableRow>
                                 {columns.map((column) => (
@@ -73,7 +75,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                                         ) : column.header}
                                     </TableCell>
                                 ))}
-                                {hasActions && <TableCell align="right" sx={{ width: '100px' }}>Actions</TableCell>}
+                                {hasActions && <TableCell align="right" sx={{ width: '130px' }}>{t('colActions')}</TableCell>}
                             </TableRow>
                         </TableHead>
                         <TableBody>

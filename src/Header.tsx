@@ -6,9 +6,11 @@ import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./auth/AuthContext";
 import config from "./config";
+import { useLanguage } from "./LanguageContext";
 
 const Header: React.FC = () => {
   const { logout, isLoggedIn, isAdmin } = useContext(AuthContext);
+  const { t, language, setLanguage } = useLanguage();
 
   const handleLogout = () => {
     fetch(`${config.authServiceUrl}/public/auth/logout`, {
@@ -27,16 +29,54 @@ const Header: React.FC = () => {
     <AppBar position="static">
       <Toolbar>
         <Box sx={{ flexGrow: 1, display: "flex", gap: 2 }}>
-          <Button color="inherit" component={Link} to="/">Home</Button>
+          <Button color="inherit" component={Link} to="/">{t('navHome')}</Button>
           {isAdmin() && (
-            <Button color="inherit" component={Link} to="/users">Users</Button>
+            <Button color="inherit" component={Link} to="/users">{t('navUsers')}</Button>
           )}
-          <Button color="inherit" component={Link} to="/contact">Contact</Button>
+          <Button color="inherit" component={Link} to="/contact">{t('navContact')}</Button>
         </Box>
         <Box sx={{ display: "flex", gap: 2 }}>
+          <Box sx={{ display: 'flex', gap: 1, mr: 2, alignItems: 'center' }}>
+            <Button
+              color="inherit"
+              sx={{
+                minWidth: 'auto',
+                p: 0.5,
+                opacity: language === 'pl' ? 1 : 0.4,
+                transition: 'opacity 0.2s',
+                '&:hover': { opacity: 0.8 }
+              }}
+              onClick={() => setLanguage('pl')}
+              title="Polski"
+            >
+              <img
+                src="https://flagcdn.com/pl.svg"
+                alt="PL"
+                style={{ width: '24px', height: '18px', borderRadius: '2px', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.2)' }}
+              />
+            </Button>
+            <Button
+              color="inherit"
+              sx={{
+                minWidth: 'auto',
+                p: 0.5,
+                opacity: language === 'en' ? 1 : 0.4,
+                transition: 'opacity 0.2s',
+                '&:hover': { opacity: 0.8 }
+              }}
+              onClick={() => setLanguage('en')}
+              title="English"
+            >
+              <img
+                src="https://flagcdn.com/gb.svg"
+                alt="ENG"
+                style={{ width: '24px', height: '18px', borderRadius: '2px', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.2)' }}
+              />
+            </Button>
+          </Box>
           {isLoggedIn && (
             <Button color="inherit" onClick={handleLogout}>
-              Log out
+              {t('navLogout')}
             </Button>
           )}
         </Box>

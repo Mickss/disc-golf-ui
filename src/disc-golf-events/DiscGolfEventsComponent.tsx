@@ -18,8 +18,10 @@ import { getRegistrationStatus, RegistrationStatus as StatusEnum } from "./Regis
 import { EventLinks } from "../components/EventLinks";
 import { formatDate } from "../utils/dateUtils";
 import { TableColumn } from "./TableColumn";
+import { useLanguage } from "../LanguageContext";
 
 const DiscGolfEventsComponent = () => {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [discGolfEvents, setDiscGolfEvents] = useState<DiscGolfEvent[]>([]);
   const [showOnlyPDGA, setShowOnlyPDGA] = useState(false);
@@ -54,10 +56,10 @@ const DiscGolfEventsComponent = () => {
 
   const deleteEvent = (eventId: string, eventTitle: string) => {
     setConfirmModalConfig({
-      title: "Delete Event",
-      message: `Are you sure you want to permanently delete "${eventTitle}"? This action cannot be undone.`,
-      confirmText: "Delete",
-      cancelText: "Cancel",
+      title: t('modalDeleteTitle'),
+      message: t('modalDeleteMsg', eventTitle),
+      confirmText: t('deleteBtn'),
+      cancelText: t('cancelBtn'),
       onConfirm: async () => {
         try {
           const response = await fetch(`${config.discGolfServiceUrl}/events/${eventId}`, {
@@ -74,7 +76,7 @@ const DiscGolfEventsComponent = () => {
 
           setSnackbar({
             open: true,
-            message: "Event deleted successfully",
+            message: t('deleteSuccess'),
             severity: "success"
           });
 
@@ -83,7 +85,7 @@ const DiscGolfEventsComponent = () => {
           console.error('Error deleting event:', error);
           setSnackbar({
             open: true,
-            message: "Failed to delete event",
+            message: t('deleteFail'),
             severity: "error"
           });
         }
@@ -132,47 +134,47 @@ const DiscGolfEventsComponent = () => {
   if (error) {
     return (
       <Alert severity="error" sx={{ maxWidth: 600, margin: "20px auto" }}>
-        Error loading events: {error}
+        {t('errorLoading')} {error}
       </Alert>
     );
   }
 
   const columns: TableColumn[] = [
   { 
-    header: "Tournament Start", 
+    header: t('colStart'),
     field: "tournamentDateStart", 
-    width: "120px",
+    width: "140px",
     visual: (event: DiscGolfEvent) => formatDate(event.tournamentDateStart) 
   },
   { 
-    header: "Tournament Title", 
+    header: t('colTitle'),
     field: "tournamentTitle",
     minWidth: "200px",
   },
   { 
-    header: "PDGA", 
+    header: t('colPdga'),
     field: "pdga",
     width: "80px"
   },
   { 
-    header: "Registration", 
+    header: t('colRegistration'),
     field: "registration",
     width: "140px",
     visual: (event: DiscGolfEvent) => <RegistrationStatusComponent event={event} />
   },
   { 
-    header: "Region", 
+    header: t('colRegion'),
     field: "region",
     width: "20%"
   },
   { 
-    header: "Registration Start", 
+    header: t('colRegStart'),
     field: "registrationStart", 
-    width: "120px",
+    width: "140px",
     visual: (event: DiscGolfEvent) => formatDate(event.registrationStart) 
   },
   { 
-    header: "Link", 
+    header: t('colLink'),
     field: "externalLink", 
     width: "100px",
     visual: (event: DiscGolfEvent) => <EventLinks event={event} />
@@ -207,14 +209,14 @@ const DiscGolfEventsComponent = () => {
 
     setSnackbar({
       open: true,
-      message: "Export successful",
+      message: t('exportSuccess'),
       severity: "success",
     });
   } catch (error) {
     console.error("Export error:", error);
     setSnackbar({
       open: true,
-      message: "Failed to export events",
+      message: t('exportFail'),
       severity: "error",
     });
   }
@@ -239,7 +241,7 @@ const handleImport = async (file: File) => {
 
     setSnackbar({
       open: true,
-      message: "Import successful",
+      message: t('importSuccess'),
       severity: "success",
     });
     fetchEvents();
@@ -247,7 +249,7 @@ const handleImport = async (file: File) => {
     console.error("Import error:", error);
     setSnackbar({
       open: true,
-      message: "Failed to import events",
+      message: t('importFail'),
       severity: "error",
     });
   } finally {
@@ -270,7 +272,7 @@ const handleImport = async (file: File) => {
         }
         setSnackbar({
           open: true,
-          message: "Successfully edited event",
+          message: t('editSuccess'),
           severity: "success"
         });
         setEditDialogOpen(false);
@@ -280,7 +282,7 @@ const handleImport = async (file: File) => {
         console.error('Error editing event:', error);
         setSnackbar({
           open: true,
-          message: "Failed to edit event",
+          message: t('editFail'),
           severity: "error"
         });
       });
@@ -312,7 +314,7 @@ const handleImport = async (file: File) => {
           sx={{ mr: 2 }}
           onClick={handleExport}
         >
-          Export Events
+          {t('exportBtn')}
         </Button>
         <input
           type="file"
@@ -331,14 +333,14 @@ const handleImport = async (file: File) => {
             component="span"
             color="secondary"
           >
-            Import Events
+            {t('importBtn')}
           </Button>
         </label>
       </div>
     )}
     <Box sx={{ mb: 3 }}>
       <Typography variant="h4" component="h1" sx={{ textAlign: "center", mb: 2 }}>
-        Disc Golf Events
+        {t('title')}
       </Typography>
     <Box sx={{ 
         display: 'flex', 
@@ -347,7 +349,7 @@ const handleImport = async (file: File) => {
         justifyContent: 'flex-start'
       }}>
         <Typography variant="body2" sx={{ fontWeight: 500 }}>
-          PDGA only
+          {t('pdgaOnly')}
         </Typography>
         <Switch
           checked={showOnlyPDGA}
@@ -399,7 +401,7 @@ const handleImport = async (file: File) => {
                   onClick={() => navigate(`/events/${row.id}`)}
                   sx={{ mr: 1 }}
                 >
-                  Details
+                  {t('detailsBtn')}
                 </Button>
               );
               actions.push(
@@ -411,7 +413,7 @@ const handleImport = async (file: File) => {
                   onClick={() => handleEdit(row)}
                   sx={{ mr: 1 }}
                 >
-                  Edit
+                  {t('editBtn')}
                 </Button>
               );
               actions.push(
@@ -423,7 +425,7 @@ const handleImport = async (file: File) => {
                   onClick={() => deleteEvent(row.id, row.tournamentTitle)}
                   sx={{ mr: 1 }}
                 >
-                  Delete
+                  {t('deleteBtn')}
                 </Button>
               );
             }
@@ -431,7 +433,7 @@ const handleImport = async (file: File) => {
           }}
         />)
         : (loading === false && <Alert severity="info" sx={{ maxWidth: 600, margin: "20px auto" }}>
-          No events found matching your filters.
+          {t('noEvents')}
         </Alert>)
       }
       {isAdmin() && (
@@ -441,7 +443,7 @@ const handleImport = async (file: File) => {
             color="success"
             onClick={() => setAddDialogOpen(true)}
           >
-            Add Event
+            {t('addEventBtn')}
           </Button>
         </div>
       )}
