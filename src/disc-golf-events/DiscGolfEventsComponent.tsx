@@ -132,9 +132,11 @@ const DiscGolfEventsComponent = () => {
   };
 
   if (error) {
+    const displayError = error === "Failed to fetch" ? t('errFailedToFetch') : error;
+    
     return (
       <Alert severity="error" sx={{ maxWidth: 600, margin: "20px auto" }}>
-        {t('errorLoading')} {error}
+        {t('errorLoading')} {displayError}
       </Alert>
     );
   }
