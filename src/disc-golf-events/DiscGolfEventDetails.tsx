@@ -5,6 +5,7 @@ import { DiscGolfEvent } from './DiscGolfEvent';
 import { useLoading } from '../spinner/LoadingProvider';
 import StatusMessage from '../components/StatusMessage';
 import { EventService } from '../services/EventService';
+import { useLanguage } from '../LanguageContext';
 
 const DiscGolfEventDetails = () => {
     const { id } = useParams<{ id: string }>();
@@ -12,6 +13,7 @@ const DiscGolfEventDetails = () => {
     const { setLoading } = useLoading();
     const [event, setEvent] = useState<DiscGolfEvent | null>(null);
     const [error, setError] = useState<string>('');
+    const { t, language } = useLanguage();
 
     useEffect(() => {
         const fetchEventDetails = async () => {
@@ -24,7 +26,7 @@ const DiscGolfEventDetails = () => {
                 setEvent(data);
             } catch (err: any) {
                 console.error('Tournament fetching error:', err);
-                setError(err.message || 'The tournament data could not be fetched.');
+                setError(err.message || t('errFetchDetails'));
             } finally {
                 setLoading(false);
             }
@@ -64,7 +66,7 @@ const DiscGolfEventDetails = () => {
                         onClick={() => navigate('/')}
                         sx={{ mb: 2 }}
                     >
-                        ⬅️ Back to Events
+                        ⬅️ {t('backToEvents')}
                     </Button>
 
                     <Paper elevation={3} sx={{ p: 4 }}>
@@ -78,48 +80,48 @@ const DiscGolfEventDetails = () => {
                         <Box sx={{ pl: { md: 1 } }}>
 
                             <Box sx={rowStyle}>
-                                <Typography sx={labelStyle}>Tournament date start</Typography>
+                                <Typography sx={labelStyle}>{t('lblTournStart')}</Typography>
                                 <Typography>{formatDate(event.tournamentDateStart)}</Typography>
                             </Box>
 
                             <Box sx={rowStyle}>
-                                <Typography sx={labelStyle}>Tournament date end</Typography>
+                                <Typography sx={labelStyle}>{t('lblTournEnd')}</Typography>
                                 <Typography>{formatDate(event.tournamentDateEnd)}</Typography>
                             </Box>
 
                             <Box sx={rowStyle}>
-                                <Typography sx={labelStyle}>PDGA</Typography>
+                                <Typography sx={labelStyle}>{t('lblPdga')}</Typography>
                                 <Typography>{event.pdga || '-'}</Typography>
                             </Box>
 
                             <Box sx={rowStyle}>
-                                <Typography sx={labelStyle}>Region</Typography>
+                                <Typography sx={labelStyle}>{t('lblRegion')}</Typography>
                                 <Typography>{event.region}</Typography>
                             </Box>
 
                             <Box sx={rowStyle}>
-                                <Typography sx={labelStyle}>Registration start</Typography>
+                                <Typography sx={labelStyle}>{t('lblRegStart')}</Typography>
                                 <Typography>{formatDate(event.registrationStart)}</Typography>
                             </Box>
 
                             <Box sx={rowStyle}>
-                                <Typography sx={labelStyle}>Registration end</Typography>
+                                <Typography sx={labelStyle}>{t('lblRegEnd')}</Typography>
                                 <Typography>{formatDate(event.registrationEnd)}</Typography>
                             </Box>
 
                             <Box sx={rowStyle}>
-                                <Typography sx={labelStyle}>Tournament director</Typography>
+                                <Typography sx={labelStyle}>{t('lblDirector')}</Typography>
                                 <Typography>{event.tournamentDirector || '-'}</Typography>
                             </Box>
 
                             <Box sx={rowStyle}>
-                                <Typography sx={labelStyle}>Capacity</Typography>
+                                <Typography sx={labelStyle}>{t('lblCapacity')}</Typography>
                                 <Typography>{event.capacity ? event.capacity : '-'}</Typography>
                             </Box>
 
                             {event.externalLink && (
                                 <Box sx={{ mt: 3, ...rowStyle }}>
-                                    <Typography sx={labelStyle}>External Link</Typography>
+                                    <Typography sx={labelStyle}>{t('lblExternalLink')}</Typography>
                                     <Box>
                                         {event.externalLink.split(';').map((link, index, array) => (
                                             <Typography key={index} variant="body1">
@@ -129,7 +131,7 @@ const DiscGolfEventDetails = () => {
                                                     rel="noreferrer"
                                                     style={{ color: '#1976d2', textDecoration: 'none' }}
                                                 >
-                                                    Tournament website{array.length > 1 ? ` ${index + 1}` : ''} ➡️
+                                                    {t('lblWebsite')}{array.length > 1 ? ` ${index + 1}` : ''} ➡️
                                                 </a>
                                             </Typography>
                                         ))}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import config from '../config';
 import { Button, DialogActions, DialogContent, DialogTitle, TextField, Box } from "@mui/material";
 import React from "react";
+import { useLanguage } from "../LanguageContext";
 
 type AddEventProps = {
     onClose: () => void;
@@ -10,6 +11,7 @@ type AddEventProps = {
 };
 
 const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, setSnackbar }) => {
+    const { t } = useLanguage();
     const [eventData, setEventData] = useState({
         tournamentDateStart: "",
         tournamentDateEnd: "",
@@ -78,7 +80,7 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                 }
                 setSnackbar({
                     open: true,
-                    message: "Event created successfully!",
+                    message: t('msgAddSuccess'),
                     severity: "success",
                 });
                 onEventAdded();
@@ -88,7 +90,7 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                 console.error("Error creating event:", error);
                 setSnackbar({
                     open: true,
-                    message: "Failed to create event",
+                    message: t('msgAddFail'),
                     severity: "error",
                 });
             });
@@ -96,11 +98,11 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
 
     return (
         <>
-            <DialogTitle>Add New Event</DialogTitle>
+            <DialogTitle>{t('titleAddEvent')}</DialogTitle>
             <DialogContent>
                 <TextField
                     margin="dense"
-                    label="Tournament Start"
+                    label={t('formTournStart')}
                     type="date"
                     fullWidth
                     name="tournamentDateStart"
@@ -110,7 +112,7 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                 />
                 <TextField
                     margin="dense"
-                    label="Tournament End"
+                    label={t('formTournEnd')}
                     type="date"
                     fullWidth
                     name="tournamentDateEnd"
@@ -120,31 +122,27 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                 />
                 <TextField
                     margin="dense"
-                    label="Registration Start"
+                    label={t('formRegStart')}
                     type="date"
                     fullWidth
                     name="registrationStart"
                     value={eventData.registrationStart}
                     onChange={handleChange}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
+                    InputLabelProps={{ shrink: true }}
                 />
                 <TextField
                     margin="dense"
-                    label="Registration End"
+                    label={t('formRegEnd')}
                     type="date"
                     fullWidth
                     name="registrationEnd"
                     value={eventData.registrationEnd}
                     onChange={handleChange}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
+                    InputLabelProps={{ shrink: true }}
                 />
                 <TextField
                     margin="dense"
-                    label="Tournament Title"
+                    label={t('formTitle')}
                     type="text"
                     required
                     fullWidth
@@ -155,12 +153,12 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                     error={touched.tournamentTitle && !eventData.tournamentTitle}
                     helperText={
                         touched.tournamentTitle && !eventData.tournamentTitle
-                            ? "Field is required" : ""
+                            ? t('formRequired') : ""
                     }
                 />
                 <TextField
                     margin="dense"
-                    label="PDGA"
+                    label={t('formPdga')}
                     type="text"
                     fullWidth
                     name="pdga"
@@ -169,7 +167,7 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                 />
                 <TextField
                     margin="dense"
-                    label="Region"
+                    label={t('formRegion')}
                     type="text"
                     fullWidth
                     name="region"
@@ -178,7 +176,7 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                 />
                 <TextField
                     margin="dense"
-                    label="Tournament Director"
+                    label={t('formDirector')}
                     type="text"
                     fullWidth
                     name="tournamentDirector"
@@ -187,7 +185,7 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                 />
                 <TextField
                     margin="dense"
-                    label="Capacity"
+                    label={t('formCapacity')}
                     type="number"
                     fullWidth
                     name="capacity"
@@ -198,7 +196,7 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                     <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: -1 }}>
                         <TextField
                             margin="dense"
-                            label={`External Link ${index + 1}`}
+                            label={`${t('formExtLink')} ${index + 1}`}
                             type="text"
                             fullWidth
                             value={link}
@@ -222,13 +220,13 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                     onClick={addLink}
                     sx={{ mt: 1, textTransform: 'none' }}
                 >
-                    + another link
+                    {t('formAnotherLink')}
                 </Button>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={onClose}>{t('cancelBtn')}</Button>
                 <Button onClick={handleSubmit} color="primary" variant="contained">
-                    Create Event
+                    {t('btnCreate')}
                 </Button>
             </DialogActions>
         </>
