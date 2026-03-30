@@ -48,6 +48,40 @@ export const en: any = {
     statusPASSED: "PASSED",
     statusARCHIVED: "ARCHIVED",
 
+    // Event details
+    errFetchDetails: "The tournament data could not be fetched.",
+    backToEvents: "Back to Events",
+    lblTournStart: "Tournament date start",
+    lblTournEnd: "Tournament date end",
+    lblPdga: "PDGA",
+    lblRegion: "Region",
+    lblRegStart: "Registration start",
+    lblRegEnd: "Registration end",
+    lblDirector: "Tournament director",
+    lblCapacity: "Capacity",
+    lblExternalLink: "External Link",
+    lblWebsite: "Tournament website",
+
+    // Forms (Add / Edit) 
+    titleAddEvent: "Add New Event",
+    titleEditEvent: "Edit Event",
+    formTournStart: "Tournament Start",
+    formTournEnd: "Tournament End",
+    formRegStart: "Registration Start",
+    formRegEnd: "Registration End",
+    formTitle: "Tournament Title",
+    formPdga: "PDGA",
+    formRegion: "Region",
+    formDirector: "Tournament Director",
+    formCapacity: "Capacity",
+    formExtLink: "External Link",
+    formAnotherLink: "+ another link",
+    formRequired: "Field is required",
+    btnCreate: "Create Event",
+    btnSaveChanges: "Save Changes",
+    msgAddSuccess: "Event created successfully!",
+    msgAddFail: "Failed to create event",
+
     // Modals (confirmation windows)
     modalDeleteTitle: "Delete Event",
     modalDeleteMsg: (title: string) => `Are you sure you want to permanently delete "${title}"? This action cannot be undone.`

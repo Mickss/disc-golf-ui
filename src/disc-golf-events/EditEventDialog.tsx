@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Box} from "@mui/material";
 import {DiscGolfEvent} from "./DiscGolfEvent";
+import { useLanguage } from "../LanguageContext";
 
 const EditEventDialog = ({ open, event, onSave, onCancel }: {
     open: boolean;
@@ -8,6 +9,7 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
     onSave: (event: DiscGolfEvent) => void;
     onCancel: () => void;
 }) => {
+    const { t } = useLanguage();
     const [editedEvent, setEditedEvent] = useState<DiscGolfEvent>({...event});
     const [touched, setTouched] = useState<{ tournamentTitle?: boolean }>({});
     const [links, setLinks] = useState<string[]>([]);
@@ -65,82 +67,82 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
 
     return (
         <Dialog open={open} onClose={onCancel} maxWidth="sm" fullWidth>
-            <DialogTitle>Edit Event</DialogTitle>
+            <DialogTitle>{t('titleEditEvent')}</DialogTitle>
             <DialogContent>
                 <TextField
                     margin="dense"
-                    label="Tournament Start"
+                    label={t('formTournStart')}
                     type="date"
                     fullWidth
                     name="tournamentDateStart"
-                    value={editedEvent.tournamentDateStart}
+                    value={editedEvent.tournamentDateStart || ''}
                     onChange={handleChange}
                     InputLabelProps={{ shrink: true }}
                 />
                 <TextField
                     margin="dense"
-                    label="Tournament End"
+                    label={t('formTournEnd')}
                     type="date"
                     fullWidth
                     name="tournamentDateEnd"
-                    value={editedEvent.tournamentDateEnd}
+                    value={editedEvent.tournamentDateEnd || ''}
                     onChange={handleChange}
                     InputLabelProps={{ shrink: true }}
                 />
                 <TextField
                     margin="dense"
-                    label="Registration Start"
+                    label={t('formRegStart')}
                     type="date"
                     fullWidth
                     name="registrationStart"
-                    value={editedEvent.registrationStart}
+                    value={editedEvent.registrationStart || ''}
                     onChange={handleChange}
                     InputLabelProps={{ shrink: true }}
                 />
                 <TextField
                     margin="dense"
-                    label="Registration End"
+                    label={t('formRegEnd')}
                     type="date"
                     fullWidth
                     name="registrationEnd"
-                    value={editedEvent.registrationEnd}
+                    value={editedEvent.registrationEnd || ''}
                     onChange={handleChange}
                     InputLabelProps={{ shrink: true }}
                 />
                 <TextField
                     margin="dense"
-                    label="PDGA"
+                    label={t('formPdga')}
                     type="text"
                     fullWidth
                     name="pdga"
-                    value={editedEvent.pdga}
+                    value={editedEvent.pdga || ''}
                     onChange={handleChange}
                 />
                 <TextField
                     margin="dense"
-                    label="Tournament Title"
+                    label={t('formTitle')}
                     type="text"
                     required
                     fullWidth
                     name="tournamentTitle"
-                    value={editedEvent.tournamentTitle}
+                    value={editedEvent.tournamentTitle || ''}
                     onChange={handleChange}
                     onBlur={() => setTouched({ ...touched, tournamentTitle: true })}
                     error={touched.tournamentTitle && !editedEvent.tournamentTitle}
-                    helperText={touched.tournamentTitle && !editedEvent.tournamentTitle ? "Field is required" : ""}
+                    helperText={touched.tournamentTitle && !editedEvent.tournamentTitle ? t('formRequired') : ""}
                 />
                 <TextField
                     margin="dense"
-                    label="Region"
+                    label={t('formRegion')}
                     type="text"
                     fullWidth
                     name="region"
-                    value={editedEvent.region}
+                    value={editedEvent.region || ''}
                     onChange={handleChange}
                 />
                 <TextField
                     margin="dense"
-                    label="Tournament Director"
+                    label={t('formDirector')}
                     type="text"
                     fullWidth
                     name="tournamentDirector"
@@ -149,7 +151,7 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
                 />
                 <TextField
                     margin="dense"
-                    label="Capacity"
+                    label={t('formCapacity')}
                     type="number"
                     fullWidth
                     name="capacity"
@@ -160,7 +162,7 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
                     <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: -1 }}>
                         <TextField
                             margin="dense"
-                            label={`External Link ${index + 1}`}
+                            label={`${t('formExtLink')} ${index + 1}`}
                             type="text"
                             fullWidth
                             value={link}
@@ -184,13 +186,13 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
                     onClick={addLink}
                     sx={{ mt: 1, textTransform: 'none' }}
                 >
-                    + another link
+                    {t('formAnotherLink')}
                 </Button>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onCancel}>Cancel</Button>
+                <Button onClick={onCancel}>{t('cancelBtn')}</Button>
                 <Button onClick={handleSave} color="primary">
-                    Save Changes
+                    {t('btnSaveChanges')}
                 </Button>
             </DialogActions>
         </Dialog>
