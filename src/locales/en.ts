@@ -42,6 +42,12 @@ export const en: any = {
     errorLoading: "Error loading events: ",
     errFailedToFetch: "Could not connect to the server.",
 
+    // Registration statuses
+    statusOPEN: "OPEN",
+    statusCLOSED: "CLOSED",
+    statusPASSED: "PASSED",
+    statusARCHIVED: "ARCHIVED",
+
     // Modals (confirmation windows)
     modalDeleteTitle: "Delete Event",
     modalDeleteMsg: (title: string) => `Are you sure you want to permanently delete "${title}"? This action cannot be undone.`

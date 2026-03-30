@@ -357,7 +357,7 @@ const handleImport = async (file: File) => {
           color="primary"
         />
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {displayedEvents.length} / {sortedDiscGolfEvents.length} events
+          {t('eventsCount', displayedEvents.length, sortedDiscGolfEvents.length)}
         </Typography>
       </Box>
     </Box>

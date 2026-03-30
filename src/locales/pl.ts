@@ -8,7 +8,7 @@ export const pl: any = {
     // Nagłówki i teksty
     title: "Turnieje Disc Golf",
     pdgaOnly: "Tylko PDGA",
-    eventsCount: (displayed: number, total: number) => `${displayed} z ${total} wydarzeń`,
+    eventsCount: (displayed: number, total: number) => `${displayed} / ${total} wydarzeń`,
     noEvents: "Nie znaleziono wydarzeń spełniających kryteria.",
     
     // Przyciski
@@ -41,6 +41,12 @@ export const pl: any = {
     editFail: "Nie udało się zedytować wydarzenia",
     errorLoading: "Błąd ładowania wydarzeń: ",
     errFailedToFetch: "Brak połączenia z serwerem.",
+
+    // Statusy Rejestracji
+    statusOPEN: "OTWARTA",
+    statusCLOSED: "ZAMKNIĘTA",
+    statusPASSED: "ZAKOŃCZONA",
+    statusARCHIVED: "ZARCHIWIZOWANY",
 
     // Modale
     modalDeleteTitle: "Usuń Wydarzenie",

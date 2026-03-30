@@ -52,7 +52,7 @@ const Header: React.FC = () => {
               <img
                 src="https://flagcdn.com/pl.svg"
                 alt="PL"
-                style={{ width: '24px', height: '18px', borderRadius: '2px', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.2)' }}
+                style={{ width: '24px', height: '18px', borderRadius: '4px', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.2)' }}
               />
             </Button>
             <Button
@@ -70,7 +70,7 @@ const Header: React.FC = () => {
               <img
                 src="https://flagcdn.com/gb.svg"
                 alt="ENG"
-                style={{ width: '24px', height: '18px', borderRadius: '2px', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.2)' }}
+                style={{ width: '24px', height: '18px', borderRadius: '4px', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.2)' }}
               />
             </Button>
           </Box>

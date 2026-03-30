@@ -1,8 +1,10 @@
 import React from "react";
 import { DiscGolfEvent } from "../disc-golf-events/DiscGolfEvent";
 import { getRegistrationStatus, RegistrationStatus as StatusEnum } from "../disc-golf-events/RegistrationUtils";
+import { useLanguage } from "../LanguageContext";
 
 export const RegistrationStatus = ({ event }: { event: DiscGolfEvent }) => {
+    const { t } = useLanguage();
     const status = getRegistrationStatus(event);
 
     const statusStyles = {
@@ -25,7 +27,7 @@ export const RegistrationStatus = ({ event }: { event: DiscGolfEvent }) => {
             display: 'inline-block',
             textTransform: 'uppercase'
         }}>
-            {status}
+            {t(`status${status}`)}
         </span>
     );
 };
