@@ -27,8 +27,12 @@ const Header: React.FC = () => {
 
   return (
     <AppBar position="static">
-      <Toolbar>
-        <Box sx={{ flexGrow: 1, display: "flex", gap: 2 }}>
+      <Toolbar sx={{
+        flexDirection: { xs: 'column', sm: 'row' },
+        py: { xs: 1, sm: 0 },
+        gap: { xs: 1, sm: 0 }
+      }}>
+        <Box sx={{ flexGrow: 1, display: "flex", gap: { xs: 0.5, sm: 2 }, }}>
           <Button color="inherit" component={Link} to="/">{t('navHome')}</Button>
           {isAdmin() && (
             <Button color="inherit" component={Link} to="/users">{t('navUsers')}</Button>
