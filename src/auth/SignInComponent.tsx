@@ -100,9 +100,9 @@ function SignInComponent() {
         </Button>
         <Grid container>
           <Grid size="grow">
-            {/* <Link href="#" variant="body2">
+            <Link href="/forgot-password" variant="body2">
               {"Forgot password?"}
-            </Link> */}
+            </Link>
           </Grid>
           <Grid>
             <Link href="/sign-up" variant="body2">
