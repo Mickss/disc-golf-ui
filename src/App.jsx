@@ -14,6 +14,8 @@ import ContactComponent from "./disc-golf-events/ContactComponent";
 import React from "react";
 import GlobalLoading from "./spinner/GlobalLoading";
 import DiscGolfEventDetails from "./disc-golf-events/DiscGolfEventDetails";
+import ResetPasswordComponent from "./auth/ResetPasswordComponent";
+import ForgotPasswordComponent from "./auth/ForgotPasswordComponent";
 
 export default function App() {
 
@@ -34,6 +36,8 @@ export default function App() {
         <Route path="/sign-up" element={<SignUpComponent />} />
         <Route path="/users" element={<UsersComponent />} />
         <Route path="/contact" element={<ContactComponent />} />
+        <Route path="/reset-password" element={<ResetPasswordComponent />} />
+        <Route path="/forgot-password" element={<ForgotPasswordComponent />} />
       </Routes>
     </ThemeProvider>
   );
