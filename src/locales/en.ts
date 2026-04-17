@@ -19,6 +19,7 @@ export const en: any = {
     editBtn: "EDIT",
     deleteBtn: "DELETE",
     cancelBtn: "CANCEL",
+    navFavorites: "FAVORITES",
 
     // Table
     colStart: "Tournament Start",

@@ -45,7 +45,8 @@ const DiscGolfEventsComponent = () => {
     cancelText?: string;
   } | null>(null);
 
-  const { isAdmin } = useContext(AuthContext);
+  const { isAdmin, isLoggedIn } = useContext(AuthContext);
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const { loading, setLoading } = useLoading();
 
   const createSortHandler = (newSort: Sort) => {
@@ -53,6 +54,43 @@ const DiscGolfEventsComponent = () => {
       setCurrentSort({ field: newSort.field, direction: newSort.direction });
     }
   }
+
+  const fetchFavorites = useCallback(async () => {
+  if (!isLoggedIn) return;
+  try {
+    const response = await fetch(`${config.discGolfServiceUrl}/events/my-events`, {
+      credentials: 'include'
+    });
+    if (response.ok) {
+      const data = await response.json();
+      setFavorites(new Set(data.map((e: DiscGolfEvent) => String(e.id))));
+    }
+  } catch (e) {
+    console.error("Error fetching favorites", e);
+  }
+}, [isLoggedIn]);
+
+useEffect(() => {
+  fetchFavorites();
+}, [fetchFavorites]);
+
+const handleToggleFavorite = async (eventId: string) => {
+  const isFav = favorites.has(eventId);
+  try {
+    await fetch(`${config.discGolfServiceUrl}/events/${eventId}/favorite`, {
+      method: isFav ? 'DELETE' : 'POST',
+      credentials: 'include',
+      body: isFav ? undefined : JSON.stringify({}),
+    });
+    setFavorites(prev => {
+      const next = new Set(prev);
+      isFav ? next.delete(eventId) : next.add(eventId);
+      return next;
+    });
+  } catch (e) {
+    console.error("Error toggling favorite", e);
+  }
+};
 
   const deleteEvent = (eventId: string, eventTitle: string) => {
     setConfirmModalConfig({
@@ -393,6 +431,26 @@ const handleImport = async (file: File) => {
 
           renderActions={(row: DiscGolfEvent) => {
             const actions: React.ReactElement[] = [];
+            if (isLoggedIn) {
+              actions.push(
+                <Button
+                  key="favorite"
+                  variant="text"
+                  size="small"
+                  onClick={() => handleToggleFavorite(String(row.id))}
+                  sx={{ 
+                    minWidth: 'auto', 
+                    mr: 0, 
+                    fontSize: '1.2rem',
+                    filter: favorites.has(String(row.id)) ? 'none' : 'grayscale(100%) brightness(0.1)',
+                    opacity: favorites.has(String(row.id)) ? 1 : 0.3,
+                  }}
+                  title={favorites.has(String(row.id)) ? "Remove from favorites" : "Add to favorites"}
+                >
+                  ⭐
+                </Button>
+              );
+            }
             if (isAdmin()) {
               actions.push(
                 <Button
@@ -401,7 +459,7 @@ const handleImport = async (file: File) => {
                   color="info"
                   size="small"
                   onClick={() => navigate(`/events/${row.id}`)}
-                  sx={{ mr: 1 }}
+                  sx={{ mr: 1, width: '130px' }}
                 >
                   {t('detailsBtn')}
                 </Button>

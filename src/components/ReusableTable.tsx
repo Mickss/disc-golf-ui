@@ -75,7 +75,7 @@ const ReusableTable = ({ title, columns, rows, currentSort, onSort, renderAction
                                         ) : column.header}
                                     </TableCell>
                                 ))}
-                                {hasActions && <TableCell align="right" sx={{ width: '130px' }}>{t('colActions')}</TableCell>}
+                                {hasActions && <TableCell align="right" sx={{ width: '160px' }}>{t('colActions')}</TableCell>}
                             </TableRow>
                         </TableHead>
                         <TableBody>
