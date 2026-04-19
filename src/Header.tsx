@@ -41,6 +41,7 @@ const Header: React.FC = () => {
         </Box>
         <Box sx={{ display: "flex", gap: 2 }}>
           <Box sx={{ display: 'flex', gap: 1, mr: 2, alignItems: 'center' }}>
+              {isLoggedIn && (<Button color="inherit" component={Link} to="/my-events">⭐ {t('navFavorites')}</Button>)}
             <Button
               color="inherit"
               sx={{

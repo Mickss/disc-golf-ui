@@ -71,9 +71,10 @@ const MobileCardView = ({ events, renderActions, getRowStyle }: {
                     {renderActions && (
                         <div style={{
                             display: 'flex',
-                            gap: '8px',
+                            gap: '4px',
                             marginTop: '8px',
-                            justifyContent: 'flex-start'
+                            justifyContent: 'flex-start',
+                            alignItems: 'center'
                         }}>
                             {renderActions(event)}
                         </div>
