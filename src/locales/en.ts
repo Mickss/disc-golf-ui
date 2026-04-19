@@ -49,6 +49,17 @@ export const en: any = {
     statusPASSED: "PASSED",
     statusARCHIVED: "ARCHIVED",
 
+    //Log in
+    sign_up_title: "Sign Up",
+    email_label: "Email Address",
+    password_label: "Password",
+    repeat_password_label: "Repeat Password",
+    accept_policy_prefix: "I accept",
+    privacy_policy_link: "privacy policy",
+    sign_up_button: "Sign Up",
+    error_accept_policy: "You must accept the privacy policy to continue.",
+    privacy_policy_footer: "Privacy Policy",
+
     // Event details
     errFetchDetails: "The tournament data could not be fetched.",
     backToEvents: "Back to Events",
