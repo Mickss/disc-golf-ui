@@ -2,8 +2,10 @@ import React from "react";
 import { Button, TextField, Box, Typography, Alert } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import config from "../config";
+import { useLanguage } from "../LanguageContext";
 
 function ResetPasswordComponent() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
@@ -19,15 +21,15 @@ function ResetPasswordComponent() {
     const confirmPassword = data.get("confirmPassword") as string;
 
     if (!newPassword || !confirmPassword) {
-      setError("All fields are required.");
+      setError(t('authResetAllReq'));
       return;
     }
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t('authResetMismatch'));
       return;
     }
     if (!token) {
-      setError("Invalid reset link.");
+      setError(t('authResetInvalidLink'));
       return;
     }
 
@@ -43,9 +45,9 @@ function ResetPasswordComponent() {
       })
       .catch((errorStatus) => {
         if (errorStatus === 400) {
-          setError("Reset link is invalid or has already been used.");
+          setError(t('authResetUsed'));
         } else {
-          setError("An unexpected error occurred. Please try again later.");
+          setError(t('authGenError'));
         }
       });
   };
@@ -53,12 +55,12 @@ function ResetPasswordComponent() {
   return (
     <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
       <Typography component="h1" variant="h5">
-        Reset Password
+        {t('authResetTitle')}
       </Typography>
 
       {success ? (
         <Alert severity="success" sx={{ width: "100%", maxWidth: 400, mt: 2 }}>
-          Password changed successfully! Redirecting to login...
+          {t('authResetSuccess')}
         </Alert>
       ) : (
         <>
@@ -73,7 +75,7 @@ function ResetPasswordComponent() {
               required
               fullWidth
               name="newPassword"
-              label="New Password"
+              label={t('authNewPassLabel')}
               type="password"
               id="newPassword"
             />
@@ -82,12 +84,12 @@ function ResetPasswordComponent() {
               required
               fullWidth
               name="confirmPassword"
-              label="Confirm New Password"
+              label={t('authConfirmPassLabel')}
               type="password"
               id="confirmPassword"
             />
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Set New Password
+              {t('authSetPassBtn')}
             </Button>
           </Box>
         </>

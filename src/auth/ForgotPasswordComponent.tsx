@@ -1,10 +1,11 @@
 import React from "react";
 import { Button, TextField, Box, Typography, Alert, Link } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-
+import { useLanguage } from "../LanguageContext";
 import config from "../config";
 
 function ForgotPasswordComponent() {
+    const { t } = useLanguage();
     const [error, setError] = React.useState<string | null>(null);
     const [success, setSuccess] = React.useState(false);
 
@@ -15,7 +16,7 @@ function ForgotPasswordComponent() {
         const email = data.get("email") as string;
 
         if (!email) {
-            setError("Email is required.");
+            setError(t('errEmailRequired'));
             return;
         }
 
@@ -36,12 +37,12 @@ function ForgotPasswordComponent() {
     return (
         <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
             <Typography component="h1" variant="h5">
-                Forgot Password
+                {t('forgotPasswordTitle')}
             </Typography>
 
             {success ? (
                 <Alert severity="success" sx={{ width: "100%", maxWidth: 400, mt: 2 }}>
-                    If this email exists in our system, you will receive a reset link shortly.
+                    {t('forgotPasswordSuccess')}
                 </Alert>
             ) : (
                 <>
@@ -56,17 +57,17 @@ function ForgotPasswordComponent() {
                             required
                             fullWidth
                             id="email"
-                            label="Email Address"
+                            label={t('email_label')}
                             name="email"
                             autoComplete="email"
                             autoFocus
                         />
                         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                            Send Reset Link
+                            {t('sendResetLinkBtn')}
                         </Button>
                         <Box sx={{ textAlign: "center" }}>
                             <Link component={RouterLink} to="/sign-in" variant="body2">
-                                {"Back to Sign In"}
+                               {t('backToSignIn')}
                             </Link>
                         </Box>
                     </Box>

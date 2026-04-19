@@ -4,8 +4,10 @@ import Grid from '@mui/material/Grid2';
 import { AuthContext } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
+import { useLanguage } from "../LanguageContext";
 
 function SignInComponent() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
   const [error, setError] = React.useState<string | null>(null);
@@ -20,7 +22,7 @@ function SignInComponent() {
     };
 
     if (!loginData.email || !loginData.password) {
-        setError("Email and password fields are required.");
+        setError(t('authSignInReq'));
         return;
     }
 
@@ -44,9 +46,9 @@ function SignInComponent() {
       .catch((errorStatus) => {
         
         if (errorStatus === 401) {
-          setError("Incorrect email or password.");
+          setError(t('authSignInIncorrect'));
         } else {
-          setError("An unexpected error occurred. Please try again later.");
+          setError(t('authGenError'));
           console.error("Login failed:", errorStatus);
         }
       });
@@ -62,7 +64,7 @@ function SignInComponent() {
       }}
     >
       <Typography component="h1" variant="h5">
-        Sign in
+        {t('authSignInTitle')}
       </Typography>
       {error && (
         <Alert severity="error" sx={{ width: "100%", maxWidth: 400, mt: 2 }}>
@@ -75,7 +77,7 @@ function SignInComponent() {
           required
           fullWidth
           id="email"
-          label="Email Address"
+          label={t('email_label')}
           name="email"
           autoComplete="email"
           autoFocus
@@ -85,7 +87,7 @@ function SignInComponent() {
           required
           fullWidth
           name="password"
-          label="Password"
+          label={t('password_label')}
           type="password"
           id="password"
           autoComplete="current-password"
@@ -96,17 +98,17 @@ function SignInComponent() {
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
         >
-          Sign In
+          {t('authSignInTitle')}
         </Button>
         <Grid container>
           <Grid size="grow">
             <Link href="/forgot-password" variant="body2">
-              {"Forgot password?"}
+              {t('authForgotLink')}
             </Link>
           </Grid>
           <Grid>
             <Link href="/sign-up" variant="body2">
-              {"Don't have an account? Sign Up"}
+              {t('authNoAccountLink')}
             </Link>
           </Grid>
         </Grid>

@@ -54,9 +54,9 @@ const MyEvents = () => {
       });
       if (!response.ok) throw new Error('Failed to remove from favorites');
       setMyEvents(prev => prev.filter(e => String(e.id) !== String(eventId)));
-      setSnackbar({ open: true, message: "Removed from favorites", severity: "success" });
+      setSnackbar({ open: true, message: t('msgRemoveFavSuccess'), severity: "success" });
     } catch (error) {
-      setSnackbar({ open: true, message: "Failed to remove from favorites", severity: "error" });
+      setSnackbar({ open: true, message: t('msgRemoveFavFail'), severity: "error" });
     }
   };
 
@@ -113,7 +113,7 @@ const MyEvents = () => {
   if (error) {
     return (
       <Alert severity="error" sx={{ maxWidth: 600, margin: "20px auto" }}>
-        Error loading favorites: {error}
+        {t('errorLoadFavorites')}{error}
       </Alert>
     );
   }
@@ -122,7 +122,7 @@ const MyEvents = () => {
     <>
       {myEvents.length > 0 ? (
         <ReusableTable
-          title="My Favorites"
+          title={t('myFavoritesTitle')}
           columns={columns}
           rows={myEvents}
           getRowStyle={(row: DiscGolfEvent) => {
