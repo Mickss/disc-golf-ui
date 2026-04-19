@@ -1,12 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import { Button, TextField, Box, Typography, Alert, Link } from "@mui/material";
+import { Button, TextField, Box, Typography, Alert, Link, FormControlLabel, Checkbox } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import config from "../config";
+import { useLanguage } from "../LanguageContext";
 
 function SignUpComponent() {
   const navigate = useNavigate();
+  const { t, language } = useLanguage();
   const [error, setError] = useState<string | null>(null);
+  const [accepted, setAccepted] = React.useState(false);
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -14,6 +17,11 @@ function SignUpComponent() {
     const email = data.get("email");
     const password = data.get("password");
     const repeatPassword = data.get("repeatPassword");
+
+    if (!accepted) {
+      setError(t("error_accept_policy")); 
+      return;
+    }
 
     if (password !== repeatPassword) {
       setError("Passwords do not match");
@@ -51,7 +59,7 @@ function SignUpComponent() {
   return (
     <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
       <Typography component="h1" variant="h5">
-        Sign up
+        {t("sign_up_title")}
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, maxWidth: 400 }}>
         {error && <Alert severity="error">{error}</Alert>}
@@ -81,8 +89,34 @@ function SignUpComponent() {
           type={"password"}
           name="repeatPassword"
         />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Sign Up
+          <FormControlLabel
+            control={
+              <Checkbox 
+                checked={accepted} 
+                onChange={(e) => setAccepted(e.target.checked)} 
+                color="primary" 
+              />
+            }
+            label={
+              <Typography variant="body2">
+                {t("accept_policy_prefix")}{" "}
+                <Link 
+                  href={language === 'pl' ? "https://disc-golf.pl/polityka-prywatnosci/" : "https://disc-golf.pl/privacy-policy/"} 
+                  target="_blank"
+                >
+                  {t("privacy_policy_link")}
+                </Link>
+              </Typography>
+            }
+        />
+          <Button 
+          type="submit" 
+          fullWidth 
+          variant="contained" 
+          disabled={!accepted} 
+          sx={{ mt: 3, mb: 2 }}
+        >
+          {t("sign_up_button")}
         </Button>
         <Grid container justifyContent="flex-end">
           <Grid>

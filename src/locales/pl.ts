@@ -49,6 +49,17 @@ export const pl: any = {
     statusPASSED: "ZAKOŃCZONA",
     statusARCHIVED: "ZARCHIWIZOWANY",
 
+    // Logowanie
+    sign_up_title: "Zarejestruj się",
+    email_label: "Adres Email",
+    password_label: "Hasło",
+    repeat_password_label: "Powtórz hasło",
+    accept_policy_prefix: "Akceptuję",
+    privacy_policy_link: "politykę prywatności",
+    sign_up_button: "Zarejestruj się",
+    error_accept_policy: "Musisz zaakceptować politykę prywatności, aby kontynuować.",
+    privacy_policy_footer: "Polityka prywatności",
+
     // Szczegóły wydarzenia
     errFetchDetails: "Nie udało się pobrać danych turnieju.",
     backToEvents: "Powrót do turniejów",
