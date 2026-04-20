@@ -24,7 +24,7 @@ function SignUpComponent() {
     }
 
     if (password !== repeatPassword) {
-      setError("Passwords do not match");
+      setError(t("authResetMismatch"));
       return;
     }
 
@@ -52,7 +52,7 @@ function SignUpComponent() {
       })
       .catch((err) => {
         console.error("Register failed:", err);
-        setError("Registration failed: " + err.message);
+        setError(t("authSignUpFail") + err.message);
       });
   };
 
@@ -67,7 +67,7 @@ function SignUpComponent() {
           margin="normal"
           required
           fullWidth
-          label="Email Address"
+          label={t("email_label")}
           name="email"
           autoComplete="email"
           autoFocus
@@ -76,7 +76,7 @@ function SignUpComponent() {
           margin="normal"
           required
           fullWidth
-          label="Password"
+          label={t("password_label")}
           type={"password"}
           name="password"
           autoComplete="new-password"
@@ -85,7 +85,7 @@ function SignUpComponent() {
           margin="normal"
           required
           fullWidth
-          label="Repeat Password"
+          label={t("repeat_password_label")}
           type={"password"}
           name="repeatPassword"
         />
@@ -121,7 +121,7 @@ function SignUpComponent() {
         <Grid container justifyContent="flex-end">
           <Grid>
             <Link href="/sign-in" variant="body2">
-            {"Already have an account? Sign in"}
+            {t("authHasAccountLink")}
             </Link>
           </Grid>
         </Grid>
