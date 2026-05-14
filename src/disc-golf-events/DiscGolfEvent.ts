@@ -10,4 +10,7 @@ export type DiscGolfEvent = {
     externalLink: string;
     tournamentDirector?: string;
     capacity?: number;
+    emailSubject?: string | null;
+    emailTemplate?: string | null;
+    reminderDatetime?: string | null;
 }

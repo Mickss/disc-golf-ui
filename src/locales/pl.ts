@@ -30,6 +30,28 @@ export const pl: any = {
     colRegStart: "Start Rejestracji",
     colLink: "Link",
     colActions: "Akcje",
+
+    // Edytor przypomnień
+    reminderConfigTitle: "Konfiguracja powiadomienia (Admin)",
+    emailSubjectLabel: "Temat e-maila",
+    emailSubjectPlaceholder: "np. [TOURNAMENT] - Przypomnienie",
+    loadTemplateBtn: "📋 Załaduj gotowy szablon",
+    availableTagsText: "Dostępne tagi: [TOURNAMENT], [DATE], [LINK]",
+    saveChangesBtn: "ZAPISZ ZMIANY",
+    replaceContentTitle: "Zastąpić treść?",
+    replaceContentDesc: "Czy na pewno chcesz zastąpić obecną treść szablonem domyślnym? Twoje niezapisane zmiany zostaną bezpowrotnie usunięte.",
+    replaceBtn: "ZASTĄP",
+    defaultSubject: "Przypomnienie o rejestracji: [TOURNAMENT]",
+    defaultTemplateHtml: "<p>Cześć!</p><p>Przypominamy o rejestracji na turniej: <b>[TOURNAMENT]</b></p><p>Zapisy ruszają: <b>[DATE]</b></p><p>Szczegóły znajdziesz tutaj: [LINK]</p><p>Pozdrawiamy!</p>",
+    templateSavedMsg: "Szablon został zapisany!",
+    errorPrefix: "Błąd: ",
+    reminderDateLabel: "Data i godzina wysyłki",
+
+    // Przycisk wyczyść bazę
+    clearBtn: "WYCZYŚĆ I USUŃ",
+    clearConfirmTitle: "Usunąć szablon z bazy?",
+    clearConfirmDesc: "Czy na pewno chcesz usunąć zapisany temat i szablon z bazy danych? Zostaną one całkowicie wyczyszczone.",
+    clearConfirmAction: "USUŃ",
     
     // Komunikaty (Snackbary)
     deleteSuccess: "Pomyślnie usunięto wydarzenie",
