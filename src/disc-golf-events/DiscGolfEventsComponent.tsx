@@ -19,6 +19,7 @@ import { EventLinks } from "../components/EventLinks";
 import { formatDate } from "../utils/dateUtils";
 import { TableColumn } from "./TableColumn";
 import { useLanguage } from "../LanguageContext";
+import { EventService } from '../services/EventService';
 
 const DiscGolfEventsComponent = () => {
   const { t } = useLanguage();
@@ -297,36 +298,27 @@ const handleImport = async (file: File) => {
   }
 };
 
-  const handleEditSubmit = (event: DiscGolfEvent) => {
-    fetch(`${config.discGolfServiceUrl}/events/${event.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify(event)
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to edit event');
-        }
+  const handleEditSubmit = async (event: DiscGolfEvent) => {
+    try {
+        await EventService.updateEvent(event.id, event);
+
         setSnackbar({
-          open: true,
-          message: t('editSuccess'),
-          severity: "success"
+            open: true,
+            message: t('editSuccess'),
+            severity: "success"
         });
         setEditDialogOpen(false);
         fetchEvents();
-      })
-      .catch(error => {
+        
+    } catch (error) {
         console.error('Error editing event:', error);
         setSnackbar({
-          open: true,
-          message: t('editFail'),
-          severity: "error"
+            open: true,
+            message: t('editFail'),
+            severity: "error"
         });
-      });
-  };
+    }
+};
 
   const statusOrder = {
     [StatusEnum.OPEN]: 1,

@@ -13,5 +13,20 @@ export const EventService = {
         }
 
         return response.json();
+    },
+
+    updateEvent: async (id: string, eventData: DiscGolfEvent): Promise<void> => {
+        const response = await fetch(`${config.discGolfServiceUrl}/events/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(eventData),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Update failed with status: ${response.status}`);
+        }
     }
 };

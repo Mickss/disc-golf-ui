@@ -31,6 +31,28 @@ export const en: any = {
     colLink: "Link",
     colActions: "Actions",
 
+    // Reminder Editor
+    reminderConfigTitle: "Notification Configuration (Admin)",
+    emailSubjectLabel: "Email Subject",
+    emailSubjectPlaceholder: "e.g., [TOURNAMENT] - Reminder",
+    loadTemplateBtn: "📋 Load Default Template",
+    availableTagsText: "Available tags: [TOURNAMENT], [DATE], [LINK]",
+    saveChangesBtn: "SAVE CHANGES",
+    replaceContentTitle: "Replace content?",
+    replaceContentDesc: "Are you sure you want to replace the current content with the default template? Your unsaved changes will be lost.",
+    replaceBtn: "REPLACE",
+    defaultSubject: "Registration reminder: [TOURNAMENT]",
+    defaultTemplateHtml: "<p>Hi!</p><p>This is a reminder for the upcoming registration: <b>[TOURNAMENT]</b></p><p>Registration starts on: <b>[DATE]</b></p><p>Check details here: [LINK]</p><p>Best regards!</p>",
+    templateSavedMsg: "Template saved successfully!",
+    errorPrefix: "Error: ",
+    reminderDateLabel: "Send Date & Time",
+
+    // Clear Database Button
+    clearBtn: "CLEAR & DELETE",
+    clearConfirmTitle: "Clear template from database?",
+    clearConfirmDesc: "Are you sure you want to delete the saved subject and template from the database? This will set them to empty.",
+    clearConfirmAction: "DELETE",
+
     // Announcements (Snackbars)
     deleteSuccess: "Event deleted successfully",
     deleteFail: "Failed to delete event",
