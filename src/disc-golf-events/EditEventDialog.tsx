@@ -158,6 +158,16 @@ const EditEventDialog = ({ open, event, onSave, onCancel }: {
                     value={editedEvent.capacity || ''}
                     onChange={handleChange}
                 />
+                <TextField
+                    margin="dense"
+                    label={t('formReminderDate')}
+                    type="datetime-local"
+                    fullWidth
+                    name="reminderDatetime"
+                    value={editedEvent.reminderDatetime || ''}
+                    onChange={handleChange}
+                    InputLabelProps={{ shrink: true }}
+                />
                 {links.map((link, index) => (
                     <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: -1 }}>
                         <TextField

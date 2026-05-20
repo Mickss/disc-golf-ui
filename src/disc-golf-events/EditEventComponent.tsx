@@ -17,6 +17,7 @@ const EditEventComponent = () => {
         externalLink?: string;
         tournamentDirector?: string;
         capacity?: number;
+        reminderDatetime?: string;
     }
     
     const [eventToEdit, setEventToEdit] = useState<Event>({
@@ -31,6 +32,7 @@ const EditEventComponent = () => {
         externalLink: "",
         tournamentDirector: "",
         capacity: undefined,
+        reminderDatetime: "",
     });
 
     useEffect(() => {
@@ -74,6 +76,7 @@ const EditEventComponent = () => {
     const externalLinkInputRef = useRef<HTMLInputElement>(null);
     const tournamentDirectorInputRef = useRef<HTMLInputElement>(null);
     const capacityInputRef = useRef<HTMLInputElement>(null);
+    const reminderDatetimeInputRef = useRef<HTMLInputElement>(null);
 
     eventToEdit.tournamentDateStart && tournamentDateStartInputRef.current && (tournamentDateStartInputRef.current.value = eventToEdit.tournamentDateStart);
     eventToEdit.tournamentDateEnd && tournamentDateEndInputRef.current && (tournamentDateEndInputRef.current.value = eventToEdit.tournamentDateEnd);
@@ -85,6 +88,7 @@ const EditEventComponent = () => {
     eventToEdit.externalLink && externalLinkInputRef.current && (externalLinkInputRef.current.value = eventToEdit.externalLink);
     eventToEdit.tournamentDirector && tournamentDirectorInputRef.current && (tournamentDirectorInputRef.current.value = eventToEdit.tournamentDirector);
     eventToEdit.capacity && capacityInputRef.current && (capacityInputRef.current.value = eventToEdit.capacity.toString());
+    eventToEdit.reminderDatetime && reminderDatetimeInputRef.current && (reminderDatetimeInputRef.current.value = eventToEdit.reminderDatetime);
 
     const updateEvent = () => {
         const eventData = {
@@ -98,6 +102,7 @@ const EditEventComponent = () => {
             externalLink: externalLinkInputRef.current ? externalLinkInputRef.current.value : "",
             tournamentDirector: tournamentDirectorInputRef.current ? tournamentDirectorInputRef.current.value : "",
             capacity: capacityInputRef.current ? parseInt(capacityInputRef.current.value) : null,
+            reminderDatetime: reminderDatetimeInputRef.current ? reminderDatetimeInputRef.current.value : null,
         };
 
         fetch(`${config.discGolfServiceUrl}/events/${eventIdToEdit}`, {
@@ -153,6 +158,10 @@ const EditEventComponent = () => {
         <div>
             <label htmlFor="capacity">Capacity </label>
             <input type="number" id="capacity" ref={capacityInputRef} />
+        </div>
+        <div>
+            <label htmlFor="reminderDatetime">Reminder Date & Time </label>
+            <input type="datetime-local" id="reminderDatetime" ref={reminderDatetimeInputRef} />
         </div>
         <div>
             <label htmlFor="externalLink">External Link </label>

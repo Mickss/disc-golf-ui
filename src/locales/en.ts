@@ -46,6 +46,7 @@ export const en: any = {
     templateSavedMsg: "Template saved successfully!",
     errorPrefix: "Error: ",
     reminderDateLabel: "Send Date & Time",
+    formReminderDate: "Reminder Date & Time",
 
     // Clear Database Button
     clearBtn: "CLEAR & DELETE",
