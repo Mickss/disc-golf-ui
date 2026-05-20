@@ -22,7 +22,8 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
         region: "",
         externalLink: "",
         tournamentDirector: "",
-        capacity: ""
+        capacity: "",
+        reminderDatetime: ""
     });
 
     const [touched, setTouched] = useState<{ tournamentTitle?: boolean }>({});
@@ -191,6 +192,16 @@ const AddEventComponent: React.FC<AddEventProps> = ({ onClose, onEventAdded, set
                     name="capacity"
                     value={eventData.capacity}
                     onChange={handleChange}
+                />
+                <TextField
+                    margin="dense"
+                    label={t('formReminderDate')} 
+                    type="datetime-local"
+                    fullWidth
+                    name="reminderDatetime"
+                    value={eventData.reminderDatetime}
+                    onChange={handleChange}
+                    InputLabelProps={{ shrink: true }}
                 />
                 {links.map((link, index) => (
                     <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: -1 }}>

@@ -46,6 +46,7 @@ export const pl: any = {
     templateSavedMsg: "Szablon został zapisany!",
     errorPrefix: "Błąd: ",
     reminderDateLabel: "Data i godzina wysyłki",
+    formReminderDate: "Data i czas przypomnienia",
 
     // Przycisk wyczyść bazę
     clearBtn: "WYCZYŚĆ I USUŃ",
