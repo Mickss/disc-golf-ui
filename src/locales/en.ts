@@ -4,6 +4,7 @@ export const en: any = {
     navUsers: "USERS",
     navContact: "CONTACT",
     navLogout: "LOG OUT",
+    navSignIn: "LOG IN",
 
     // Headings and text
     title: "Disc Golf Events",

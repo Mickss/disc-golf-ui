@@ -79,9 +79,13 @@ const Header: React.FC = () => {
               />
             </Button>
           </Box>
-          {isLoggedIn && (
+          {isLoggedIn ? (
             <Button color="inherit" onClick={handleLogout}>
               {t('navLogout')}
+            </Button>
+          ) : (
+            <Button color="inherit" component={Link} to="/sign-in">
+              {t('navSignIn')}
             </Button>
           )}
         </Box>
