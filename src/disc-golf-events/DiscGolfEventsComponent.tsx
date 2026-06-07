@@ -432,7 +432,6 @@ const handleImport = async (file: File) => {
                   onClick={() => handleToggleFavorite(String(row.id))}
                   sx={{ 
                     minWidth: 'auto', 
-                    mr: 0, 
                     fontSize: '1.2rem',
                     filter: favorites.has(String(row.id)) ? 'none' : 'grayscale(100%) brightness(0.1)',
                     opacity: favorites.has(String(row.id)) ? 1 : 0.3,
@@ -442,8 +441,7 @@ const handleImport = async (file: File) => {
                   ⭐
                 </Button>
               );
-            }
-            if (isAdmin()) {
+              
               actions.push(
                 <Button
                   key="details"
@@ -451,11 +449,13 @@ const handleImport = async (file: File) => {
                   color="info"
                   size="small"
                   onClick={() => navigate(`/events/${row.id}`)}
-                  sx={{ mr: 1, width: '130px' }}
+                  sx={{ width: '85px' }}
                 >
                   {t('detailsBtn')}
                 </Button>
               );
+            }
+            if (isAdmin()) {
               actions.push(
                 <Button
                   key="edit"

@@ -4,7 +4,8 @@ export const pl: any = {
     navUsers: "UŻYTKOWNICY",
     navContact: "KONTAKT",
     navLogout: "WYLOGUJ",
-    
+    navSignIn: "ZALOGUJ",
+
     // Nagłówki i teksty
     title: "Turnieje Disc Golf",
     pdgaOnly: "Tylko PDGA",
