@@ -118,13 +118,26 @@ const MyEvents = () => {
     );
   }
 
+  const statusOrder = {
+    [StatusEnum.OPEN]: 1,
+    [StatusEnum.CLOSED]: 2,
+    [StatusEnum.PASSED]: 3,
+    [StatusEnum.ARCHIVED]: 4
+  };
+
+  const sortedMyEvents: DiscGolfEvent[] = [...myEvents].sort((a, b) => {
+    const statusA = getRegistrationStatus(a);
+    const statusB = getRegistrationStatus(b);
+    return statusOrder[statusA] - statusOrder[statusB];
+  });
+
   return (
     <>
-      {myEvents.length > 0 ? (
+      {sortedMyEvents.length > 0 ? (
         <ReusableTable
           title={t('myFavoritesTitle')}
           columns={columns}
-          rows={myEvents}
+          rows={sortedMyEvents}
           getRowStyle={(row: DiscGolfEvent) => {
             const status = getRegistrationStatus(row);
             if (status === StatusEnum.OPEN) {
